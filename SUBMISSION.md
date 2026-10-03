@@ -1,6 +1,6 @@
 # Marketplace submission checklist
 
-Candidate: CARBON Lite 0.1.4, MIT, skills-only. No MCP configuration,
+Candidate: CARBON Lite 0.1.5, MIT, skills-only. No MCP configuration,
 app references, lifecycle hooks, obfuscation, analytics or hosted account.
 
 Official references checked 2026-10-03:

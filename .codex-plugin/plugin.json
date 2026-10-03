@@ -1,6 +1,6 @@
 {
   "name": "carbon-lite",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "CARBON Lite: AI software testing and QA skills for developers and QA engineers, with a portable visual report and no MCP server.",
   "author": { "name": "testers.ai", "url": "https://testers.ai/carbon/" },
   "license": "MIT",
@@ -12,6 +12,7 @@
     "longDescription": "CARBON Lite helps developers and QA engineers test software inside their coding agent. Jay, an AI test manager, guides eight bounded workflows: broad assessment, focused feature testing, issue hunting, accessibility, current-run evidence maps, disposable demos, help, and preferences. Talk directly to Jay with /jay or /j. Includes a portable visual Studio report with evidence-backed findings, coverage gaps, and confidence assessments. Uses the coding agent's authorized browser and terminal tools; reports distinguish executed checks from proposed work. Test coverage depends on the available project context, access, and execution tools. No MCP server, OAuth, telemetry, or hosted account. Open source under the MIT license. Not a certification or guarantee that software is defect-free.",
     "developerName": "testers.ai",
     "category": "Developer Tools",
+    "capabilities": [],
     "websiteURL": "https://testers.ai/carbon/",
     "supportURL": "https://github.com/jarbon/carbon-lite/blob/main/SUPPORT.md",
     "privacyPolicyURL": "https://github.com/jarbon/carbon-lite/blob/main/PRIVACY.md",

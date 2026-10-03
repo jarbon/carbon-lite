@@ -2,7 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { validateCapabilities } from "./validate-listing.mjs";
 const manifest = JSON.parse(fs.readFileSync(".codex-plugin/plugin.json"));
+validateCapabilities(manifest);
 if (manifest.mcpServers || manifest.apps || manifest.hooks)
   throw Error("Skills-only package must not register servers, apps or hooks.");
 const release = path.resolve(
