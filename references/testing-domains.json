@@ -1,0 +1,872 @@
+{
+  "schema": "carbon.testing-domains/v1",
+  "defaultSize": "quick",
+  "focusedCommand": "carbon-test",
+  "domains": [
+    {
+      "id": "geo",
+      "command": "carbon-geo",
+      "title": "GEO and AI Search",
+      "purpose": "Evaluate AI-search discoverability, technical eligibility, useful grounded answers, entity credibility and truthful structured data; distinguish local readiness from observed engine citations.",
+      "aliases": [
+        "generative-engine-optimization",
+        "ai-seo",
+        "aeo",
+        "answer-engine-optimization",
+        "ai-search"
+      ],
+      "specialistIds": [
+        "zara",
+        "sophia",
+        "sundar"
+      ],
+      "artifacts": [
+        "page-text",
+        "source",
+        "dom",
+        "screenshots",
+        "response-headers",
+        "robots-and-sitemaps",
+        "structured-data",
+        "query-evidence-matrix",
+        "authorized-search-analytics"
+      ],
+      "families": [
+        "crawl indexing and snippet eligibility",
+        "search versus training access controls",
+        "intent-specific answerability and extraction",
+        "entity identity credibility freshness and source evidence",
+        "structured-data truth and locale consistency",
+        "observed citations and first-party measurement boundaries",
+        "site sampling and comparable trends",
+        "prioritized improvements without deceptive optimization"
+      ],
+      "guidanceCheckedAt": "2026-09-12",
+      "safety": "Read-only bounded public or authorized inspection. No private exposure, indexing submission, account/CDN changes, training opt-in, search-UI bypass, paid service or private-content upload without authorization. No guaranteed visibility or invented metrics.",
+      "reportName": "GEO report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "agentic",
+      "command": "carbon-agentic",
+      "title": "Agent Readiness",
+      "purpose": "Evaluate how agents discover, understand and safely operate a website, API or tool interface through consumer-first tasks, semantics, contracts and recovery; not a model evaluation or SEO certification.",
+      "aliases": [
+        "agent-friendly",
+        "agent-readiness",
+        "agent-usability",
+        "machine-usability",
+        "webmcp"
+      ],
+      "specialistIds": [
+        "alejandro",
+        "tariq",
+        "sharon"
+      ],
+      "artifacts": [
+        "live-ui",
+        "screenshots",
+        "accessibility-tree",
+        "dom",
+        "source",
+        "openapi-or-schema",
+        "requests",
+        "responses",
+        "tool-contracts",
+        "journey-trace"
+      ],
+      "families": [
+        "consumer-specific discovery and content comprehension",
+        "semantic names roles labels and entity disambiguation",
+        "structured data and visible-content agreement",
+        "API and tool contract discoverability and correctness",
+        "multi-step task execution and independent outcome verification",
+        "state identity timing and recovery",
+        "human intervention and safe consequential actions",
+        "applicable standards versus optional experimental enhancements"
+      ],
+      "guidanceCheckedAt": "2026-09-12",
+      "safety": "Use isolated local contexts and synthetic data. Preserve authentication and approval boundaries; no CAPTCHA bypass, cloud upload, browser flag changes, installs, or consequential tool calls without authorization. Agent friendliness does not require public access.",
+      "reportName": "Agent Readiness report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "functionality",
+      "command": "carbon-functionality",
+      "title": "Functionality",
+      "purpose": "Verify the product does the promised work across happy paths, negative paths, state transitions, boundaries, recovery, concurrency, permissions, and integrations.",
+      "aliases": [
+        "functional",
+        "behavior",
+        "logic",
+        "pure-functionality"
+      ],
+      "specialistIds": [
+        "richard",
+        "fatima",
+        "jason"
+      ],
+      "artifacts": [
+        "source",
+        "live-ui",
+        "dom",
+        "console",
+        "network",
+        "api",
+        "data-state",
+        "screenshots"
+      ],
+      "families": [
+        "promised task outcomes",
+        "positive and negative paths",
+        "empty null malformed and extreme inputs",
+        "boundaries and state transitions",
+        "permissions and role behavior",
+        "retry idempotency and concurrency",
+        "failure recovery and truthful status",
+        "downstream and upstream integration effects"
+      ],
+      "reportName": "Functionality report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "ui",
+      "command": "carbon-ui",
+      "title": "User Interface",
+      "purpose": "Find visual and interaction defects in layout, hierarchy, consistency, controls, states, responsiveness, feedback, and polish.",
+      "aliases": [
+        "visual-ui",
+        "interface",
+        "visual"
+      ],
+      "specialistIds": [
+        "mia",
+        "sophia",
+        "yuki"
+      ],
+      "artifacts": [
+        "screenshots",
+        "dom",
+        "computed-style",
+        "responsive-viewports",
+        "interaction-states",
+        "source"
+      ],
+      "families": [
+        "layout and alignment",
+        "hierarchy and readability",
+        "control affordance and consistency",
+        "hover focus active disabled loading empty and error states",
+        "responsive reflow and clipping",
+        "spacing typography imagery and iconography",
+        "theme and contrast behavior",
+        "cross-page visual consistency"
+      ],
+      "reportName": "UI report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "ux",
+      "command": "carbon-ux",
+      "title": "User Experience",
+      "purpose": "Evaluate whether realistic users can understand, complete, recover from, and trust important journeys.",
+      "aliases": [
+        "experience",
+        "journey",
+        "flow-ux"
+      ],
+      "specialistIds": [
+        "mia",
+        "fatima",
+        "yuki"
+      ],
+      "artifacts": [
+        "live-ui",
+        "screenshots",
+        "journey-trace",
+        "content",
+        "errors",
+        "timing"
+      ],
+      "families": [
+        "task clarity and mental model",
+        "discoverability and navigation",
+        "flow length and unnecessary work",
+        "feedback and progress",
+        "error prevention and recovery",
+        "trust and expectation matching",
+        "first-time and returning-user differences",
+        "interruption resume and cross-device continuity"
+      ],
+      "reportName": "UX report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "usability",
+      "command": "carbon-usability",
+      "title": "Usability",
+      "purpose": "Exercise realistic tasks with representative perspectives and record friction separately from deterministic defects.",
+      "aliases": [
+        "ease-of-use",
+        "user-testing",
+        "human-factors"
+      ],
+      "specialistIds": [
+        "mia",
+        "fatima"
+      ],
+      "artifacts": [
+        "live-ui",
+        "screenshots",
+        "persona-observations",
+        "task-timing",
+        "navigation",
+        "errors"
+      ],
+      "families": [
+        "learnability",
+        "efficiency",
+        "memorability",
+        "error rate and recovery",
+        "satisfaction and confidence",
+        "terminology and comprehension",
+        "keyboard and touch efficiency",
+        "persona-specific friction"
+      ],
+      "reportName": "Usability report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "accessibility",
+      "command": "carbon-accessibility",
+      "title": "Accessibility and WCAG",
+      "purpose": "Find barriers to disabled users and produce criterion-level WCAG 2.2 evidence without treating automation alone as conformance proof.",
+      "aliases": [
+        "a11y",
+        "wcag",
+        "inclusive-design"
+      ],
+      "specialistIds": [
+        "alejandro",
+        "hiroshi"
+      ],
+      "artifacts": [
+        "live-ui",
+        "screenshots",
+        "dom",
+        "accessibility-tree",
+        "computed-style",
+        "keyboard-trace",
+        "source",
+        "virtual-screen-reader-transcript"
+      ],
+      "virtualScreenReader": {
+        "defaultMode": "auto",
+        "modes": [
+          "auto",
+          "virtual",
+          "off"
+        ],
+        "reference": "virtual-screen-reader.md",
+        "purpose": "Use locally available Guidepup for explicit reading-order, name, state and hidden-content expectations across distinct page states. No automatic dependency installation or CDN imports.",
+        "boundary": "Simulated DOM evidence only; not real screen-reader behavior, live-announcement timing, or WCAG conformance."
+      },
+      "families": [
+        "perceivable text media structure and contrast",
+        "operable keyboard focus target size motion and timing",
+        "understandable language labels instructions errors and consistency",
+        "robust name role value status and assistive-technology semantics",
+        "zoom reflow orientation and responsive access",
+        "complete processes and materially different page states",
+        "manual checks that automation cannot decide"
+      ],
+      "standards": [
+        "WCAG 2.2 A",
+        "WCAG 2.2 AA",
+        "relevant WCAG 2.2 AAA observations"
+      ],
+      "requiredReports": [
+        "Accessibility report",
+        "WCAG 2.2 criterion report",
+        "Accessibility Conformance Report"
+      ],
+      "wcag": {
+        "targetLevel": "AA",
+        "outcomes": [
+          "pass",
+          "fail",
+          "not-tested",
+          "not-applicable",
+          "needs-manual-review"
+        ],
+        "requiredFields": [
+          "success criterion",
+          "level",
+          "outcome",
+          "tested page or state",
+          "method",
+          "evidence",
+          "impact",
+          "recommended fix"
+        ],
+        "conformanceBoundary": "Do not claim page, process, or site conformance unless all applicable criteria and complete-process requirements were evaluated with adequate evidence. Automated scans alone cannot establish conformance."
+      },
+      "acr": {
+        "templateBasis": "VPAT 2.5Rev WCAG Edition (April 2025)",
+        "artifact": "Accessibility Conformance Report",
+        "conformanceLevels": [
+          "Supports",
+          "Partially Supports",
+          "Does Not Support",
+          "Not Applicable"
+        ],
+        "workingState": "Not Determined",
+        "publicationBoundary": "Generate a working ACR from observed evidence, keep missing metadata and unresolved criteria explicit, require complete-scope and product-owner review, and never claim certification or publish automatically."
+      },
+      "reportName": "Accessibility, WCAG, and ACR report set",
+      "dedicatedCommandEdition": "free"
+    },
+    {
+      "id": "privacy",
+      "command": "carbon-privacy",
+      "title": "Privacy",
+      "purpose": "Trace personal and sensitive data through collection, display, logs, requests, storage, sharing, retention, consent, deletion, and AI use.",
+      "aliases": [
+        "pii",
+        "data-protection",
+        "ccpa",
+        "gdpr"
+      ],
+      "specialistIds": [
+        "pete",
+        "zanele",
+        "rajesh",
+        "sundar"
+      ],
+      "artifacts": [
+        "live-ui",
+        "screenshots",
+        "network",
+        "console",
+        "storage-metadata",
+        "source",
+        "policies",
+        "data-flow"
+      ],
+      "families": [
+        "personal-data inventory and minimization",
+        "consent purpose and withdrawal",
+        "tracking before and after choice",
+        "display URL log and error leakage",
+        "storage retention export deletion and correction",
+        "third-party transfer and regional handling",
+        "privacy policy versus observed behavior",
+        "AI prompt training memory and generated-output exposure"
+      ],
+      "reportName": "Privacy report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "security",
+      "command": "carbon-security",
+      "title": "Security",
+      "purpose": "Test product, web, and API trust boundaries with safe, authorized probes and source-aware threat hypotheses.",
+      "aliases": [
+        "appsec",
+        "owasp",
+        "secure"
+      ],
+      "specialistIds": [
+        "sharon",
+        "marcus"
+      ],
+      "artifacts": [
+        "source",
+        "live-ui",
+        "network",
+        "headers",
+        "cookies",
+        "console",
+        "api",
+        "dependencies"
+      ],
+      "families": [
+        "authentication authorization and tenant isolation",
+        "session cookie token and logout safety",
+        "injection and output encoding",
+        "secrets and sensitive-data exposure",
+        "transport CORS CSP and security headers",
+        "dependency and supply-chain risk",
+        "rate limits abuse resistance and resource bounds",
+        "audit logging monitoring containment and recovery"
+      ],
+      "safety": "Default to non-destructive review and benign probes. Hostile, privilege, denial-of-service, data-exfiltration, or production-impacting tests require explicit authorization, scope, limits, safe identities, and recovery.",
+      "reportName": "Security report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "load",
+      "command": "carbon-load",
+      "title": "Load Testing",
+      "purpose": "Deeply inspect code and server/deployment configuration read-only for likely load failures; assess readiness, capture approved journeys and run staged replay only within explicitly approved limits. Static hypotheses are not measured capacity.",
+      "aliases": [
+        "load-testing",
+        "load-test",
+        "traffic-replay"
+      ],
+      "specialistIds": [
+        "tariq"
+      ],
+      "artifacts": [
+        "source",
+        "server-config",
+        "deployment-config",
+        "schema",
+        "har",
+        "network-log",
+        "screenshots",
+        "scenario-plan",
+        "approval-record",
+        "stage-metrics",
+        "system-metrics"
+      ],
+      "families": [
+        "deep read-only code path and effective versus checked-in configuration review",
+        "source-backed bottleneck hypotheses counterevidence and conditional resource budgets",
+        "target ownership environment dependencies readiness and observation",
+        "separate capture and load-generation confirmation",
+        "sensitive traffic sanitation and replay eligibility",
+        "correlated virtual-user identities sessions and synthetic data",
+        "bounded smoke ramp pacing concurrency and request ceilings",
+        "business assertions latency throughput errors and saturation",
+        "abort recovery cleanup and non-destructive boundaries",
+        "measured stage comparisons generator limitations and reproducible retests"
+      ],
+      "safety": "No target traffic before capture confirmation and no load before separate explicit plan-specific user approval. Enforce approved origin/routes, VUs, RPS, requests, time and stop thresholds. No third-party, production-impacting, paid, destructive or notification traffic without specific authorization. Never bypass throttling or auto-restart after abort.",
+      "reportName": "Load testing report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "stress",
+      "command": "carbon-stress",
+      "title": "Stress Readiness and Recovery",
+      "purpose": "Review source/server configuration read-only and test explicit stress hypotheses using bounded isolated local loops or separately approved external scenarios, measuring correctness and recovery as well as pressure.",
+      "aliases": [
+        "stress-testing",
+        "stress-test",
+        "stress-readiness"
+      ],
+      "specialistIds": [
+        "tariq",
+        "marcus"
+      ],
+      "artifacts": [
+        "source",
+        "server-config",
+        "deployment-config",
+        "dependency-map",
+        "local-harness",
+        "approval-record",
+        "stage-metrics",
+        "recovery-evidence"
+      ],
+      "families": [
+        "deep read-only capacity and configuration hypotheses",
+        "verified localhost isolation and remote dependency classification",
+        "two distinct sequential confirmations for any non-local stress",
+        "bounded tight-loop parsing cache cleanup queue contention and cancellation probes",
+        "independent iteration concurrency input and resource dimensions",
+        "supervision resource ceilings abort and no-egress local isolation",
+        "correctness invariants post-pressure recovery and retained state",
+        "source versus measured evidence and bounded-capacity conclusions"
+      ],
+      "safety": "Assessment never executes app code or changes original source/server settings. Local execution needs explicit bounded approval and enforced isolation. Anything other than verified isolated localhost requires two separate sequential user confirmations. No unbounded loops, host exhaustion, detached generators, protection bypass or automatic restart after abort.",
+      "reportName": "Stress readiness and recovery report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "performance",
+      "command": "carbon-performance",
+      "title": "Performance",
+      "purpose": "Measure user-visible speed and system behavior under realistic data, device, network, concurrency, and duration conditions.",
+      "aliases": [
+        "perf",
+        "speed",
+        "web-vitals"
+      ],
+      "specialistIds": [
+        "tariq"
+      ],
+      "artifacts": [
+        "performance-trace",
+        "network",
+        "screenshots",
+        "resource-timing",
+        "api-timing",
+        "system-metrics",
+        "source"
+      ],
+      "families": [
+        "startup and page-load milestones",
+        "Core Web Vitals and interaction latency",
+        "request payload bundle image and font cost",
+        "cache CDN compression and reuse",
+        "API database and downstream timing",
+        "mobile CPU memory battery and network constraints",
+        "concurrency throughput queueing and backpressure",
+        "long-run memory leaks degradation and recovery"
+      ],
+      "reportName": "Performance report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "networking",
+      "command": "carbon-networking",
+      "title": "Networking",
+      "purpose": "Verify protocol, request, response, caching, connectivity, timeout, retry, offline, proxy, and dependency behavior.",
+      "aliases": [
+        "network",
+        "connectivity",
+        "http",
+        "transport"
+      ],
+      "specialistIds": [
+        "tariq",
+        "sharon",
+        "marcus"
+      ],
+      "artifacts": [
+        "network-log",
+        "headers",
+        "cookies",
+        "dns-tls-metadata",
+        "performance-timing",
+        "console",
+        "server-log"
+      ],
+      "families": [
+        "DNS TLS HTTP and redirect correctness",
+        "request methods headers bodies and content types",
+        "status codes errors and contract consistency",
+        "cache compression CDN and conditional requests",
+        "timeouts retries backoff cancellation and idempotency",
+        "offline reconnect packet loss and slow-network behavior",
+        "CORS proxies gateways firewalls and third parties",
+        "sensitive data in URLs headers logs and telemetry"
+      ],
+      "reportName": "Networking report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "state",
+      "command": "carbon-state",
+      "title": "State Integrity and Round Trips",
+      "purpose": "Find inconsistent, lost, stale or invalid state through source inspection and bounded multi-step, multi-tab, independent-user/API and export/reimport scenarios, including invalid-load and recovery behavior.",
+      "aliases": [
+        "state-testing",
+        "state-integrity",
+        "state-consistency",
+        "round-trip"
+      ],
+      "specialistIds": [
+        "marcus",
+        "sharon",
+        "tariq"
+      ],
+      "artifacts": [
+        "source",
+        "schema",
+        "state-model",
+        "actor-timeline",
+        "storage-snapshot",
+        "export-file",
+        "network-log",
+        "screenshots",
+        "recovery-evidence"
+      ],
+      "families": [
+        "authoritative state ownership invariants transitions and persistence boundaries",
+        "multi-tab shared-session and independent-user API interleavings",
+        "stale responses conflicts lost updates retries and idempotency",
+        "save reload reopen offline reconciliation and account switching",
+        "export reimport semantic round trips and snapshot consistency",
+        "invalid persisted data schemas migrations startup and recovery",
+        "isolated corruption tests source hypotheses versus demonstrated failures",
+        "minimal event-sequence reproduction and state-difference evidence"
+      ],
+      "safety": "Source assessment is read-only. Use isolated copies and synthetic records for corruption, imports, deletion, interruption or migration. Never overwrite original exports or clear real browser/database state. Gate consequential/shared mutations; bounded actors are not load/stress authorization.",
+      "reportName": "State integrity report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "reliability",
+      "command": "carbon-reliability",
+      "title": "Reliability and Resilience",
+      "purpose": "Challenge continuity, consistency, recovery, observability, and truthfulness under dependency failures, restarts, races, and repeated use.",
+      "aliases": [
+        "resilience",
+        "stability",
+        "recovery"
+      ],
+      "specialistIds": [
+        "tariq",
+        "fatima",
+        "jason"
+      ],
+      "artifacts": [
+        "live-ui",
+        "api",
+        "logs",
+        "traces",
+        "network",
+        "data-state",
+        "restart-and-recovery-evidence"
+      ],
+      "families": [
+        "dependency failure and graceful degradation",
+        "retry idempotency deduplication and replay",
+        "restart crash and partial-write recovery",
+        "race ordering consistency and stale state",
+        "timeouts cancellation circuit breakers and backpressure",
+        "observability alertability and truthful health",
+        "long-duration and repeated-operation stability",
+        "backup restore rollback and disaster recovery"
+      ],
+      "reportName": "Reliability report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "compatibility",
+      "command": "carbon-compatibility",
+      "title": "Compatibility",
+      "purpose": "Verify important behavior across supported browsers, engines, devices, viewports, input modes, operating systems, and integration versions.",
+      "aliases": [
+        "cross-browser",
+        "browser-compatibility",
+        "device"
+      ],
+      "specialistIds": [
+        "mia",
+        "alejandro",
+        "tariq"
+      ],
+      "artifacts": [
+        "screenshots",
+        "live-ui",
+        "browser-matrix",
+        "console",
+        "network",
+        "accessibility-tree"
+      ],
+      "families": [
+        "supported browser and engine matrix",
+        "desktop mobile tablet and responsive states",
+        "mouse keyboard touch pen and assistive input",
+        "operating-system rendering and conventions",
+        "feature detection fallbacks and polyfills",
+        "storage cookies permissions and private modes",
+        "API dependency and schema-version compatibility",
+        "upgrade downgrade and backward compatibility"
+      ],
+      "reportName": "Compatibility report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "content",
+      "command": "carbon-content",
+      "title": "Content",
+      "purpose": "Check content truth, clarity, structure, completeness, consistency, credibility, navigation, errors, media, and responsive readability.",
+      "aliases": [
+        "copy",
+        "writing",
+        "seo",
+        "information-architecture"
+      ],
+      "specialistIds": [
+        "sophia",
+        "zara",
+        "sundar"
+      ],
+      "artifacts": [
+        "page-text",
+        "screenshots",
+        "dom",
+        "metadata",
+        "links",
+        "source"
+      ],
+      "families": [
+        "page identity and information hierarchy",
+        "clarity grammar terminology and reading level",
+        "claims evidence dates prices and policy truth",
+        "missing stale duplicate placeholder and debug content",
+        "links navigation labels and calls to action",
+        "images media captions alternatives and metadata",
+        "error empty loading and completion messages",
+        "responsive localization and accessibility readability"
+      ],
+      "reportName": "Content report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "data",
+      "command": "carbon-data",
+      "title": "Data Integrity",
+      "purpose": "Trace input, validation, transformation, persistence, synchronization, migration, export, deletion, and authorization of important data.",
+      "aliases": [
+        "data-integrity",
+        "database",
+        "persistence"
+      ],
+      "specialistIds": [
+        "richard",
+        "pete",
+        "jason"
+      ],
+      "artifacts": [
+        "source",
+        "api",
+        "database-schema",
+        "data-state",
+        "logs",
+        "exports",
+        "migration-artifacts"
+      ],
+      "families": [
+        "schema constraints defaults and nullability",
+        "validation normalization encoding and precision",
+        "create read update delete and lifecycle truth",
+        "transactions partial writes races and idempotency",
+        "migration backward compatibility and rollback",
+        "sync import export round-trip and deduplication",
+        "authorization privacy retention and erasure",
+        "audit lineage reconciliation and corruption detection"
+      ],
+      "reportName": "Data integrity report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "api",
+      "command": "carbon-api",
+      "title": "API",
+      "purpose": "Exercise API contracts, auth, inputs, outputs, errors, versions, state, concurrency, security, performance, and consumers.",
+      "aliases": [
+        "rest",
+        "graphql",
+        "rpc",
+        "webhook"
+      ],
+      "specialistIds": [
+        "sharon",
+        "tariq",
+        "jason"
+      ],
+      "artifacts": [
+        "openapi-or-schema",
+        "source",
+        "requests",
+        "responses",
+        "logs",
+        "traces",
+        "consumer-code",
+        "data-state"
+      ],
+      "families": [
+        "method route schema and content-type contracts",
+        "authentication authorization scopes and tenancy",
+        "valid invalid missing extra duplicate and extreme inputs",
+        "status errors pagination filtering sorting and rate limits",
+        "idempotency concurrency ordering retries and webhooks",
+        "versioning deprecation backward and consumer compatibility",
+        "injection leakage CORS SSRF and resource bounds",
+        "latency caching observability and downstream failure"
+      ],
+      "reportName": "API report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "intl",
+      "command": "carbon-intl",
+      "title": "Internationalization Readiness and Completion",
+      "purpose": "Assess engineering readiness and evidence-qualified completion against the app's intended locales, markets, requirements and critical journeys, separately from linguistic translation review.",
+      "aliases": [
+        "internationalization",
+        "i18n",
+        "internationalisation",
+        "intl-readiness"
+      ],
+      "specialistIds": [
+        "sophia",
+        "mia",
+        "alejandro",
+        "mateo"
+      ],
+      "artifacts": [
+        "source",
+        "locale-files",
+        "requirements",
+        "runtime-config",
+        "live-ui",
+        "screenshots",
+        "api",
+        "data-state",
+        "tests",
+        "build-artifacts"
+      ],
+      "families": [
+        "declared implemented and verified locale support",
+        "string externalization extraction catalog parsing and message architecture",
+        "locale negotiation persistence fallback loading and recovery",
+        "dates numbers currencies Unicode input storage search and round trips",
+        "RTL mixed direction fonts expansion and accessible responsive rendering",
+        "localized API cache background jobs documents and exports",
+        "locale packaging CI regression and translation lifecycle",
+        "requirements by locale completion matrix blockers evidence freshness and release authority"
+      ],
+      "reportName": "INTL readiness and completion report",
+      "dedicatedCommandEdition": "pro"
+    },
+    {
+      "id": "localization",
+      "command": "carbon-localization",
+      "title": "Localization and Internationalization",
+      "purpose": "Find internationalization blockers and contextually incorrect translations by connecting source strings and locale catalogs to actual screen states, actions, terminology, and user consequences.",
+      "aliases": [
+        "l10n",
+        "translation"
+      ],
+      "specialistIds": [
+        "sophia",
+        "mia",
+        "alejandro",
+        "mateo"
+      ],
+      "artifacts": [
+        "live-ui",
+        "screenshots",
+        "page-text",
+        "source",
+        "locale-files",
+        "api",
+        "data-state"
+      ],
+      "families": [
+        "source and target locale inventory glossary and contextual call-site mapping",
+        "language selection detection persistence and fallback",
+        "catalog completeness duplicate keys native format parsing placeholders and plural branches",
+        "contextual translation meaning negation action actor tense terminology and locale variant",
+        "payment deletion consent error and recovery semantic consequences",
+        "hardcoded strings concatenation and untranslated secondary channels",
+        "text expansion truncation wrapping and responsive layout",
+        "right-to-left direction and bidirectional text",
+        "Unicode normalization graphemes emoji and input methods",
+        "date time number currency address name and plural formats",
+        "sorting search case accents collation and segmentation",
+        "locale-specific accessibility legal and cultural expectations",
+        "side-by-side translation evidence suggested wording and native-review boundaries"
+      ],
+      "reportName": "Localization report",
+      "dedicatedCommandEdition": "pro"
+    }
+  ]
+}

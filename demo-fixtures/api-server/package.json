@@ -1,0 +1,15 @@
+{
+  "name": "bookstore-api",
+  "version": "1.0.0",
+  "description": "Zero-dependency bookstore REST API test fixture",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

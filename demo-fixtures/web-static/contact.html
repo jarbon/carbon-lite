@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brewtown Coffee — Contact</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html">☕ Brewtown</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="active">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Contact us</h1>
+
+    <form id="contact-form" novalidate>
+      <div class="field">
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name" required>
+        <span class="error" data-for="name"></span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" required>
+        <span class="error" data-for="email"></span>
+      </div>
+
+      <div class="field">
+        <label for="topic">Topic</label>
+        <select id="topic" name="topic">
+          <option value="general">General question</option>
+          <option value="wholesale">Wholesale</option>
+          <option value="events">Private events</option>
+          <option value="feedback">Feedback</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">Message * <small>(at least 10 characters)</small></label>
+        <textarea id="message" name="message" rows="5" required minlength="10"></textarea>
+        <span class="error" data-for="message"></span>
+      </div>
+
+      <button type="submit" class="btn">Send message</button>
+      <p id="form-status" role="status"></p>
+    </form>
+
+    <section class="saved-messages">
+      <h2>Previously sent (stored locally)</h2>
+      <ul id="message-list"></ul>
+      <button id="clear-messages" class="btn btn-secondary">Clear history</button>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Brewtown Coffee · 123 Roast St, Portland, OR</p>
+  </footer>
+
+  <script src="js/contact.js"></script>
+</body>
+</html>

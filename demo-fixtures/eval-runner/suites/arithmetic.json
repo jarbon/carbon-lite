@@ -1,0 +1,16 @@
+{
+  "name": "arithmetic",
+  "description": "Basic arithmetic word problems; candidate must print the numeric answer.",
+  "tasks": [
+    { "id": "add-small",    "prompt": "2 + 3",        "scorer": "numeric", "expected": 5 },
+    { "id": "add-large",    "prompt": "1234 + 8766",  "scorer": "numeric", "expected": 10000 },
+    { "id": "subtract",     "prompt": "100 - 42",     "scorer": "numeric", "expected": 58 },
+    { "id": "multiply",     "prompt": "12 * 12",      "scorer": "numeric", "expected": 144 },
+    { "id": "divide",       "prompt": "144 / 12",     "scorer": "numeric", "expected": 12 },
+    { "id": "divide-float", "prompt": "10 / 4",       "scorer": "numeric", "expected": { "value": 2.5, "tol": 0.001 } },
+    { "id": "negative",     "prompt": "7 - 20",       "scorer": "numeric", "expected": -13 },
+    { "id": "precedence",   "prompt": "2 + 3 * 4",    "scorer": "numeric", "expected": 14 },
+    { "id": "parens",       "prompt": "(2 + 3) * 4",  "scorer": "numeric", "expected": 20 },
+    { "id": "zero",         "prompt": "0 * 999",      "scorer": "numeric", "expected": 0 }
+  ]
+}

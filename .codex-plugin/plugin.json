@@ -1,0 +1,25 @@
+{
+  "name": "carbon-lite",
+  "version": "0.1.0",
+  "description": "CARBON Lite testing skills with an optional JavaScript evidence recorder and portable visual workspace. No MCP, OAuth, hosted service, or telemetry.",
+  "author": { "name": "testers.ai", "url": "https://testers.ai/carbon/" },
+  "license": "PolyForm-Perimeter-1.0.0",
+  "repository": "https://github.com/jarbon/carbon-lite",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "CARBON Lite",
+    "shortDescription": "Your lightweight QA workspace",
+    "longDescription": "Jay helps assess software with eight bounded testing workflows: broad assessment, focused feature testing, issue hunting, accessibility, current-run evidence maps, disposable demos, help, and preferences. Includes a portable visual Studio report. Uses the coding agent's authorized browser and terminal tools; reports distinguish executed checks from proposed work. No MCP server, OAuth, telemetry, or hosted account. Source-available under PolyForm Perimeter 1.0.0. Not a certification or guarantee of correctness.",
+    "developerName": "testers.ai",
+    "category": "Productivity",
+    "websiteURL": "https://testers.ai/carbon/",
+    "supportURL": "https://github.com/jarbon/carbon-lite/blob/main/SUPPORT.md",
+    "privacyPolicyURL": "https://github.com/jarbon/carbon-lite/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/jarbon/carbon-lite/blob/main/TERMS.md",
+    "brandColor": "#386450",
+    "brandColorDark": "#B9DAC9",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
+    "defaultPrompt": ["Assess this project with CARBON Lite.", "Review these test results and explain the remaining risks.", "Open my CARBON Lite report."]
+  }
+}

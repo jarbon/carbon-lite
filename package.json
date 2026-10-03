@@ -1,0 +1,17 @@
+{
+  "name": "carbon-lite",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "PolyForm-Perimeter-1.0.0",
+  "repository": "https://github.com/jarbon/carbon-lite",
+  "description": "Serverless CARBON Lite skills and a portable local quality workspace",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "package": "npm run build && npm test && node scripts/package.mjs"
+  },
+  "dependencies": { "zod": "4.4.3" },
+  "devDependencies": { "esbuild": "0.28.2" }
+}

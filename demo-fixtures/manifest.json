@@ -1,0 +1,80 @@
+{
+  "schema": "carbon.demo-fixtures/v1",
+  "version": 1,
+  "defaultFixture": "web-static",
+  "fixtures": [
+    {
+      "id": "web-static",
+      "label": "Brewtown Coffee \u2014 simple website",
+      "description": "A compact multi-page static site with menu loading, search, client-side form validation, and local storage.",
+      "kind": "website",
+      "complexity": "starter",
+      "default": true,
+      "start": {
+        "command": "python3 -m http.server 8080",
+        "url": "http://127.0.0.1:8080/"
+      },
+      "testPaths": [
+        "tests"
+      ],
+      "testSummary": "Two small test assets: a manual critical-flow charter and an optional Playwright smoke test."
+    },
+    {
+      "id": "web-app",
+      "label": "TaskBoard \u2014 interactive SPA",
+      "description": "A vanilla JavaScript task board with routing, create/edit/complete/delete behavior, computed stats, and local storage.",
+      "kind": "web-app",
+      "complexity": "starter",
+      "start": {
+        "command": "python3 -m http.server 8081",
+        "url": "http://127.0.0.1:8081/#/board"
+      },
+      "testPaths": [
+        "tests"
+      ],
+      "testSummary": "A manual task-lifecycle charter and an optional Playwright flow test."
+    },
+    {
+      "id": "api-server",
+      "label": "Bookstore \u2014 Node REST API",
+      "description": "A zero-dependency Node API with validation, in-memory data, authorization, filtering, and node:test unit plus integration coverage.",
+      "kind": "api",
+      "complexity": "starter",
+      "start": {
+        "command": "node src/server.js",
+        "url": "http://127.0.0.1:3000/health"
+      },
+      "testPaths": [
+        "test"
+      ],
+      "testSummary": "Existing node:test unit and real-HTTP integration tests plus a manual API boundary charter."
+    },
+    {
+      "id": "eval-runner",
+      "label": "Eval Runner \u2014 deterministic AI-style eval harness",
+      "description": "A Python stdlib evaluation harness with suites, scorers, report generation, parallel execution, and intentionally good and buggy candidates.",
+      "kind": "eval",
+      "complexity": "intermediate",
+      "start": {
+        "command": "python3 -m evalrunner run --suite suites/arithmetic.json --candidate \"python3 candidates/calc_buggy.py\" --out results/",
+        "url": ""
+      },
+      "testPaths": [
+        "tests"
+      ],
+      "testSummary": "Existing unittest coverage plus a manual evaluator and reporting-review charter."
+    }
+  ],
+  "testProfiles": [
+    {
+      "id": "without-existing-tests",
+      "label": "No existing tests",
+      "description": "Copy only the product artifact so CARBON can discover and generate its first candidates from scratch."
+    },
+    {
+      "id": "with-existing-tests",
+      "label": "Include existing tests",
+      "description": "Copy the same product together with a small representative manual and/or automated suite for CARBON to inventory and improve."
+    }
+  ]
+}

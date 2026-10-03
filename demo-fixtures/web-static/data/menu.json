@@ -1,0 +1,17 @@
+{
+  "items": [
+    { "id": 1,  "name": "House Drip",        "category": "coffee", "price": 3.25, "featured": true,  "description": "Rotating single-origin, brewed fresh every 30 minutes." },
+    { "id": 2,  "name": "Espresso",          "category": "coffee", "price": 3.5,  "featured": false, "description": "Double shot of our Roast St. blend." },
+    { "id": 3,  "name": "Cappuccino",        "category": "coffee", "price": 4.75, "featured": true,  "description": "Classic 6oz cap with velvety microfoam." },
+    { "id": 4,  "name": "Oat Milk Latte",    "category": "coffee", "price": 5.5,  "featured": false, "description": "12oz latte with house-steamed oat milk." },
+    { "id": 5,  "name": "Cold Brew",         "category": "coffee", "price": 4.5,  "featured": true,  "description": "Steeped 18 hours, served over ice." },
+    { "id": 6,  "name": "Mocha",             "category": "coffee", "price": 5.75, "featured": false, "description": "Espresso, dark chocolate ganache, steamed milk." },
+    { "id": 7,  "name": "Earl Grey",         "category": "tea",    "price": 3.0,  "featured": false, "description": "Loose-leaf bergamot black tea." },
+    { "id": 8,  "name": "Jasmine Green",     "category": "tea",    "price": 3.0,  "featured": false, "description": "Fragrant green tea, brewed at 175°F." },
+    { "id": 9,  "name": "Chai Latte",        "category": "tea",    "price": 4.95, "featured": true,  "description": "House-spiced chai concentrate with steamed milk." },
+    { "id": 10, "name": "Butter Croissant",  "category": "food",   "price": 3.75, "featured": false, "description": "Laminated in-house, baked every morning." },
+    { "id": 11, "name": "Avocado Toast",     "category": "food",   "price": 8.5,  "featured": true,  "description": "Sourdough, smashed avocado, chili flake, lemon." },
+    { "id": 12, "name": "Blueberry Muffin",  "category": "food",   "price": 4.0,  "featured": false, "description": "Oregon blueberries, streusel top." },
+    { "id": 13, "name": "Breakfast Burrito", "category": "food",   "price": 9.75, "featured": false, "description": "Eggs, black beans, cheddar, salsa verde." }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "text-transform",
+  "description": "Text manipulation commands of the form '<op>: <text>'.",
+  "tasks": [
+    { "id": "upper",        "prompt": "upper: hello world",        "scorer": "exact",    "expected": "HELLO WORLD" },
+    { "id": "lower",        "prompt": "lower: SHOUTING",           "scorer": "exact",    "expected": "shouting" },
+    { "id": "reverse",      "prompt": "reverse: abcdef",           "scorer": "exact",    "expected": "fedcba" },
+    { "id": "wordcount",    "prompt": "wordcount: the quick brown fox", "scorer": "numeric", "expected": 4 },
+    { "id": "title",        "prompt": "title: war and peace",      "scorer": "exact",    "expected": "War And Peace" },
+    { "id": "contains-multi", "prompt": "describe: apple banana",  "scorer": "contains", "expected": ["apple", "banana"] },
+    { "id": "regex-shape",  "prompt": "date: today",               "scorer": "regex",    "expected": "^\\d{4}-\\d{2}-\\d{2}$" },
+    { "id": "json-echo",    "prompt": "json: {\"a\": 1, \"b\": [2, 3]}", "scorer": "json_equal", "expected": { "a": 1, "b": [2, 3] } }
+  ]
+}

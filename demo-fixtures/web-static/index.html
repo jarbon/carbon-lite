@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brewtown Coffee — Home</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html">☕ Brewtown</a>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Small-batch coffee, roasted daily</h1>
+      <p>Family-owned since 2009. Beans sourced directly from farmers.</p>
+      <a class="btn" href="menu.html">See the menu</a>
+    </section>
+
+    <section class="featured">
+      <h2>Featured this week</h2>
+      <div id="featured-grid" class="grid" aria-live="polite">
+        <p class="loading">Loading…</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Brewtown Coffee · 123 Roast St, Portland, OR</p>
+    <p>Open daily 6am–6pm</p>
+  </footer>
+
+  <script src="js/menu-data.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
