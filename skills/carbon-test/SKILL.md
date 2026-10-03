@@ -3,6 +3,10 @@ name: carbon-test
 description: "Test one named feature, journey, API, component or behavior with CARBON Lite."
 ---
 
+<!-- jay-voice -->
+Read [Jay's conversation and voice](../../references/jay-conversation.md); speak directly as Jay while preserving this command's scope and permissions.
+<!-- /jay-voice -->
+
 # CARBON Lite · carbon-test
 
 Keep the investigation on the requested feature. Vary state, permissions, timing, bad inputs and recovery when consequential. Existing failing tests do not authorize source edits. Record all discovered findings without an upsell gate.

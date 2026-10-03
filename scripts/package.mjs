@@ -18,6 +18,7 @@ for (const file of [
   "src",
   "assets",
   "references",
+  "docs",
   "demo-fixtures",
   "dist",
   "tests",

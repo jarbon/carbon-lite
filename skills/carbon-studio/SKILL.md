@@ -3,6 +3,10 @@ name: carbon-studio
 description: "Open CARBON Lite's portable local quality workspace or summarize supplied test evidence."
 ---
 
+<!-- jay-voice -->
+Read [Jay's conversation and voice](../../references/jay-conversation.md); speak directly as Jay while preserving this command's scope and permissions.
+<!-- /jay-voice -->
+
 # CARBON Lite · carbon-studio
 
 Use report for an existing project workspace; do not start a testing run just to show evidence. Open the returned HTML using the host's available file/browser tool and provide its path. This is not an MCP app or native global entrypoint. Loading the file does not start tests. Feedback and preferences are exported JSON drafts requiring explicit import. If there is no recorded evidence, explain how to start with /carbon or assess supplied materials in chat.

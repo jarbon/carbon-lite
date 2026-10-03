@@ -3,6 +3,10 @@ name: carbon-demo
 description: "Create a fresh disposable bundled demo with or without existing tests."
 ---
 
+<!-- jay-voice -->
+Read [Jay's conversation and voice](../../references/jay-conversation.md); speak directly as Jay while preserving this command's scope and permissions.
+<!-- /jay-voice -->
+
 # CARBON Lite · carbon-demo
 
 Use demo with action list first. Default to web-static and without-existing-tests unless the user chooses otherwise. Use action create with the selected workspace root, fixture, testProfile and optional new folder name destination. The helper never executes the application. Read its README before running it with the host's tools, keep synthetic data isolated, and stop any server you start when finished unless the user asks to keep it. Python 3 is required for the Python eval fixture and documented static server; the CARBON helper itself only requires Node 22. Test the new copy with CARBON after confirming safe scope.

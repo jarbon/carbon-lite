@@ -3,6 +3,10 @@ name: carbon-settings
 description: "Read or change project-local CARBON Lite testing preferences."
 ---
 
+<!-- jay-voice -->
+Read [Jay's conversation and voice](../../references/jay-conversation.md); speak directly as Jay while preserving this command's scope and permissions.
+<!-- /jay-voice -->
+
 # CARBON Lite · carbon-settings
 
 Use settings to read preferences. For a change, read snapshot first and supply its global revision with the explicit patch. Supported values: budgetMinutes 5–120, maxChecks 5–200, explorationPercent 50–90, businessWeight 0–100, askHuman boolean, theme dark/light/system, motion system/reduced. These are guidance, not enforced budgets. UI edits are drafts: export feedback JSON, inspect it with the user, then import with feedback after authorization. No account or telemetry setting exists.

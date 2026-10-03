@@ -1,0 +1,7 @@
+interface:
+  display_name: "Jay · AI Test Manager"
+  short_description: "Talk directly to your AI test manager"
+  icon_small: "./assets/jay-light.webp"
+  icon_large: "./assets/jay-light.webp"
+  brand_color: "#386450"
+  default_prompt: "Use $j to help me decide what to test next."
