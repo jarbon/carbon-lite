@@ -1,10 +1,10 @@
 # CARBON Lite — skills-only edition
 
-The eight CARBON Lite workflows plus a portable Studio workspace. Source-available under PolyForm Perimeter 1.0.0,
+The eight CARBON Lite workflows plus a portable Studio workspace. Open source under MIT,
 readable JavaScript. No MCP server, OAuth, account, analytics, hosted service or
 CARBON model calls. Built by testers.ai. This is a separate edition; it does not
 replace the existing Claude package or the original Studio submission. The separate
-[CARBON Studio Pro repository](https://github.com/jarbon/carbon-studio-pro) preserves
+private CARBON Studio Pro edition preserves
 the full local MCP experience. Lite is the first package intended for submission.
 
 ## Install in Codex
@@ -22,9 +22,9 @@ Host capabilities and permissions determine which tests can actually run.
 
 ## License
 
-You may use CARBON Lite internally at work under [PolyForm Perimeter](LICENSE).
-Providing a competing product is restricted. This is source-available, not an
-unrestricted open-source license. Third-party dependency licenses remain intact;
+CARBON Lite is open source under the [MIT license](LICENSE). You may use it at
+work, fork it, modify it, redistribute it, and sell copies, preserving the required
+copyright and license notices. Third-party dependency licenses remain intact;
 see [NOTICE.md](NOTICE.md). There is no trademark endorsement grant.
 
 ## Commands

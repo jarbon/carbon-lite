@@ -172,7 +172,7 @@ test("manifest includes Jay entrypoints without adding MCP/hook/app declarations
   const m = JSON.parse(
     fs.readFileSync(path.join(plugin, ".codex-plugin/plugin.json")),
   );
-  assert.equal(m.license, "PolyForm-Perimeter-1.0.0");
+  assert.equal(m.license, "MIT");
   assert.equal(m.name, "carbon-lite");
   for (const field of ['supportURL', 'privacyPolicyURL', 'termsOfServiceURL']) assert(m.interface[field].startsWith('https://github.com/jarbon/carbon-lite/'));
   assert(!m.mcpServers && !m.hooks && !m.apps);

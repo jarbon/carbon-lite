@@ -1,15 +1,15 @@
 {
   "name": "carbon-lite",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "CARBON Lite: AI software testing and QA skills for developers and QA engineers, with a portable visual report and no MCP server.",
   "author": { "name": "testers.ai", "url": "https://testers.ai/carbon/" },
-  "license": "PolyForm-Perimeter-1.0.0",
+  "license": "MIT",
   "repository": "https://github.com/jarbon/carbon-lite",
   "skills": "./skills/",
   "interface": {
     "displayName": "CARBON Lite",
     "shortDescription": "AI software testing and QA",
-    "longDescription": "CARBON Lite helps developers and QA engineers test software inside their coding agent. Jay, an AI test manager, guides eight bounded workflows: broad assessment, focused feature testing, issue hunting, accessibility, current-run evidence maps, disposable demos, help, and preferences. Talk directly to Jay with /jay or /j. Includes a portable visual Studio report with evidence-backed findings, coverage gaps, and confidence assessments. Uses the coding agent's authorized browser and terminal tools; reports distinguish executed checks from proposed work. Test coverage depends on the available project context, access, and execution tools. No MCP server, OAuth, telemetry, or hosted account. Source-available under PolyForm Perimeter 1.0.0. Not a certification or guarantee that software is defect-free.",
+    "longDescription": "CARBON Lite helps developers and QA engineers test software inside their coding agent. Jay, an AI test manager, guides eight bounded workflows: broad assessment, focused feature testing, issue hunting, accessibility, current-run evidence maps, disposable demos, help, and preferences. Talk directly to Jay with /jay or /j. Includes a portable visual Studio report with evidence-backed findings, coverage gaps, and confidence assessments. Uses the coding agent's authorized browser and terminal tools; reports distinguish executed checks from proposed work. Test coverage depends on the available project context, access, and execution tools. No MCP server, OAuth, telemetry, or hosted account. Open source under the MIT license. Not a certification or guarantee that software is defect-free.",
     "developerName": "testers.ai",
     "category": "Developer Tools",
     "websiteURL": "https://testers.ai/carbon/",

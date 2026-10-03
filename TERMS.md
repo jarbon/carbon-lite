@@ -2,10 +2,9 @@
 
 Effective October 3, 2026. Provided by Testers.ai. Contact: jason@testers.ai.
 
-The [PolyForm Perimeter 1.0.0 license](LICENSE) governs first-party software use,
-copying, modification, and distribution. It permits internal use, including at
-work, but restricts providing competing products. Third-party licenses remain
-applicable to their components. These notes do not add to or replace LICENSE.
+The [MIT license](LICENSE) governs first-party software use, copying, modification,
+distribution, and sale, including commercial use. Third-party licenses remain
+applicable to their components. These usage notes do not add restrictions to or replace the MIT license.
 
 Only test systems and data you are authorized to access. Keep destructive tests,
 load generation, purchases, external communications, and fixes within the scope

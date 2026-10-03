@@ -1,6 +1,6 @@
 # Marketplace submission checklist
 
-Candidate: CARBON Lite 0.1.0, PolyForm Perimeter 1.0.0, skills-only. No MCP configuration,
+Candidate: CARBON Lite 0.1.4, MIT, skills-only. No MCP configuration,
 app references, lifecycle hooks, obfuscation, analytics or hosted account.
 
 Official references checked 2026-10-03:
@@ -38,5 +38,5 @@ Portal upload/scans, clean-host installation and skill invocation, reviewer chec
 and approval remain unverified until performed. No hosted MCP endpoint or OAuth
 setup is needed. The source repository is https://github.com/jarbon/carbon-lite.
 
-PolyForm Perimeter applies to this package's first-party code/content. Dependency notices
+MIT applies to this package's first-party code/content. Dependency notices
 remain intact. CARBON/testers.ai names do not imply endorsement of third-party forks.

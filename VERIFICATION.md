@@ -2,10 +2,10 @@
 
 ## 2026-10-03 release checks
 
-- All 20 automated tests passed; all nine skills passed the skill frontmatter validator.
+- All 20 automated tests passed; the original nine skills passed the skill frontmatter validator.
 - The synthetic workspace rendered in the built-in browser. Findings, evidence disclosure,
   draft notes, and map navigation were exercised. This is not a customer test run.
-- First-party license metadata and LICENSE match PolyForm Perimeter 1.0.0.
+- Release 0.1.4: first-party license metadata and LICENSE use MIT.
 - Pattern-based credential and private-file checks found no real credentials; these
   checks are not a comprehensive security certification.
 
@@ -16,8 +16,8 @@ and creates a ZIP from an explicit file allowlist.
 
 The tests cover evidence validation, revision conflicts, atomic persistence,
 explicit feedback import, screenshot containment, demo-copy safety, escaped HTML,
-private file permissions, and the exact nine-skill boundary (eight workflows plus
-the report-opening skill). Test outcomes are reported with the release, not assumed.
+private file permissions, and the eleven-skill boundary (eight workflows, the report-opening skill,
+and two Jay conversational aliases). Test outcomes are reported with the release, not assumed.
 
 Synthetic preview records are demonstrations, not evidence of product testing.
 Marketplace upload, review, publication, and clean-host Codex invocation are separate
