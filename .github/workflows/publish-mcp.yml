@@ -1,0 +1,27 @@
+name: Publish MCP registry entry
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - name: Download released registry metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download mcp-v0.1.0 --pattern server.json --dir registry-release
+      - name: Download pinned publisher and verify checksum
+        run: |
+          curl -fsSL https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz -o publisher.tar.gz
+          echo 'a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc  publisher.tar.gz' | sha256sum -c -
+          tar xzf publisher.tar.gz mcp-publisher
+      - name: Authenticate using short-lived GitHub OIDC
+        run: ./mcp-publisher login github-oidc
+      - name: Publish the released MCP bundle
+        run: ./mcp-publisher publish registry-release/server.json

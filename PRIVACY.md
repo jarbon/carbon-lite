@@ -1,17 +1,20 @@
 # CARBON Lite privacy policy
 
-Effective October 3, 2026. Provided by Testers.ai. Contact: jason@testers.ai.
+Effective October 4, 2026. Provided by Testers.ai. Contact: jason@testers.ai.
 
 ## What the plugin processes
 
 CARBON Lite supplies testing instructions and an optional local evidence helper.
-It has no CARBON account, MCP server, hosted backend, analytics, or model endpoint.
+It has no CARBON account, hosted backend, analytics, or model endpoint. The Codex
+plugin is serverless. The separate MCP distribution runs a local stdio server,
+restricted to the project configured at startup; it opens no network listener.
 The bundled helper makes no network requests. It records the observations, notes,
 test results, screenshots, and preferences explicitly passed to it by your host.
 
 The coding agent still processes prompts and project context under its provider's
 terms. Browser/API tests contact the selected application and its services. Local
 execution is not a promise that your coding-agent provider receives no data.
+MCP tool responses return recorded evidence to the client and its model provider.
 
 ## Storage and sharing
 
@@ -44,6 +47,9 @@ of each release before installing it.
 
 <!-- jay-background -->
 ## Optional Jay background checks
+
+This section applies to the Codex plugin, not the standalone MCP bundle, which
+does not install hooks or enable background execution.
 
 After an explicit per-project choice and host hook trust, Jay checks changed code during breaks. Defaults: 2-minute idle delay, 3-minute runs, maximum 10 minutes per run, one worker, 3 runs and 10 reserved minutes per UTC day across projects. No automatic fixes or live-site testing. Local checks and outcome counts stay on this machine. Optional Claude-only AI source review requires separate consent to provider processing and allowance use. Codex checks do not launch Claude. Use `carbon-background` to enable, pause, review, or disable everywhere. See [behavior, controls and privacy](background/README.md). Unsupported hosts retain manual testing.
 <!-- /jay-background -->

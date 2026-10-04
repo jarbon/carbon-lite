@@ -1,0 +1,15 @@
+{
+  "manifest_version": "0.3", "name": "carbon-lite",
+  "display_name": "Testers.ai CARBON Test Harness Lite", "version": "0.1.0",
+  "description": "Local test planning, bug evidence, accessibility workflows and visual quality reports for AI agents.",
+  "author": { "name": "testers.ai", "url": "https://testers.ai/carbon/" },
+  "repository": { "type": "git", "url": "https://github.com/jarbon/carbon-lite" },
+  "homepage": "https://github.com/jarbon/carbon-lite/blob/main/mcp/README.md",
+  "documentation": "https://github.com/jarbon/carbon-lite/blob/main/mcp/README.md",
+  "support": "https://github.com/jarbon/carbon-lite/issues", "icon": "assets/icon.png", "license": "MIT",
+  "keywords": ["testing", "quality", "qa", "accessibility", "reports"],
+  "privacy_policies": ["https://github.com/jarbon/carbon-lite/blob/main/PRIVACY.md"], "tools_generated": true,
+  "server": { "type": "node", "entry_point": "mcp/server.mjs", "mcp_config": { "command": "node", "args": ["${__dirname}/mcp/server.mjs", "${user_config.project_directory}"] } },
+  "compatibility": { "platforms": ["darwin", "win32", "linux"], "runtimes": { "node": ">=22" } },
+  "user_config": { "project_directory": { "type": "directory", "title": "Project directory", "description": "Choose a project where CARBON may save evidence and reports. Screenshots must be inside this directory. Do not select your home folder.", "required": true } }
+}

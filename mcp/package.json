@@ -1,0 +1,7 @@
+{
+  "name": "@testers-ai/carbon-lite-mcp", "version": "0.1.0", "private": true,
+  "type": "module", "license": "MIT", "engines": { "node": ">=22" },
+  "description": "Local software testing evidence and QA workflows for MCP clients",
+  "dependencies": { "@modelcontextprotocol/sdk": "1.32.0", "zod": "4.4.3" },
+  "devDependencies": { "@anthropic-ai/mcpb": "2.1.2" }
+}

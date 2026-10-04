@@ -1,11 +1,17 @@
 # CARBON Lite — local skills and optional background checks
 
 The eight CARBON Lite workflows plus a portable Studio workspace. Open source under MIT,
-readable JavaScript. No MCP server, OAuth, account, analytics, hosted service or
+readable JavaScript. The Codex plugin needs no MCP server, OAuth, account, analytics, hosted service or
 CARBON model calls. Built by testers.ai. This is a separate edition; it does not
 replace the existing Claude package or the original Studio submission. The separate
 private CARBON Studio Pro edition preserves
 the full local MCP experience. Lite is the first package intended for submission.
+
+## Standalone MCP distribution
+
+For MCP clients and directories, use the separate [local MCP bundle](mcp/README.md).
+It adds stdio tools and prompts around the Lite evidence engine, not Pro features.
+The Codex plugin ZIP remains serverless.
 
 ## Install in Codex
 

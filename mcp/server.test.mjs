@@ -1,0 +1,57 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+const bundle = path.resolve('output/mcp/0.1.0/carbon-lite');
+async function connect(root) {
+  const client = new Client({ name: 'carbon-release-test', version: '1.0.0' });
+  const transport = new StdioClientTransport({ command: process.execPath, args: [path.join(bundle, 'mcp/server.mjs'), ...(root ? [root] : [])], stderr: 'pipe' });
+  await client.connect(transport);
+  return client;
+}
+const data = result => { assert.ok(!result.isError, result.content?.[0]?.text); return JSON.parse(result.content[0].text); };
+test('bundled MCP: discovery, every prompt, evidence lifecycle and isolation', async t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'carbon-mcp-test-'));
+  const client = await connect(root);
+  t.after(async () => { await client.close(); fs.rmSync(root, { recursive: true }); });
+  const tools = (await client.listTools()).tools;
+  assert.equal(tools.length, 10);
+  const prompts = (await client.listPrompts()).prompts;
+  assert.equal(prompts.length, 11);
+  for (const p of prompts) assert.match((await client.getPrompt({ name: p.name, arguments: { target: 'synthetic fixture' } })).messages[0].content.text, /MCP host instructions/);
+  assert.match((await client.callTool({ name: 'carbon_workflow', arguments: { command: 'carbon' } })).content[0].text, /evidence/);
+  assert.ok((await client.callTool({ name: 'carbon_knowledge', arguments: {} })).content[0].text.length > 100);
+  const call = (name, args = {}) => client.callTool({ name, arguments: args });
+  const started = data(await call('carbon_start', { title: 'Synthetic transport test', target: 'local fixture' }));
+  const runId = started.result.runId;
+  assert.ok(fs.existsSync(started.html));
+  const failedEvidence = await call('carbon_update', { runId, revision: 0, checks: [{ id: 'a', title: 'Missing evidence', domain: 'Test', type: 'positive', status: 'passed' }] });
+  assert.equal(failedEvidence.isError, true);
+  data(await call('carbon_update', { runId, revision: 0, pages: [{ id: 'page', title: 'Synthetic page', url: 'about:blank' }], checks: [{ id: 'a', title: 'Synthetic observation', domain: 'Test', type: 'positive', status: 'passed', actual: 'Test fixture assertion', evidence: ['Synthetic protocol test, not product testing'] }] }));
+  assert.equal((await call('carbon_update', { runId, revision: 0, summary: 'stale' })).isError, true);
+  fs.copyFileSync('assets/icon.png', path.join(root, 'fixture.png'));
+  data(await call('carbon_screenshot', { runId, pageId: 'page', file: 'fixture.png' }));
+  assert.equal((await call('carbon_screenshot', { runId, pageId: 'page', file: path.resolve('assets/icon.png') })).isError, true);
+  let snap = data(await call('carbon_snapshot'));
+  assert.equal(snap.runs[0].pages[0].hasImage, true);
+  assert.equal(snap.runs[0].pages[0].image, undefined);
+  data(await call('carbon_settings', { revision: snap.revision, patch: { maxChecks: 12 } }));
+  assert.equal(data(await call('carbon_settings')).result.maxChecks, 12);
+  snap = data(await call('carbon_snapshot'));
+  data(await call('carbon_feedback', { confirm: true, feedback: { schema: 'carbon.studio-lite-feedback/v1', revision: snap.revision, steering: [] } }));
+  assert.equal((await call('carbon_feedback', { confirm: false, feedback: {} })).isError, true);
+  data(await call('carbon_demo', { action: 'list' }));
+  data(await call('carbon_update', { runId, revision: snap.runs[0].revision, status: 'completed', confidence: { score: 50, scope: 'Synthetic fixture only', rationale: 'Transport test', limitations: ['No actual product tested'] } }));
+  const exported = data(await call('carbon_report'));
+  assert.match(fs.readFileSync(exported.html, 'utf8'), /Synthetic transport test/);
+  assert.equal((await call('carbon_update', { runId, revision: snap.runs[0].revision + 1, summary: 'rewrite closed' })).isError, true);
+});
+test('unconfigured discovery works but writes fail closed', async t => {
+  const client = await connect(); t.after(() => client.close());
+  assert.equal((await client.listTools()).tools.length, 10);
+  const result = await client.callTool({ name: 'carbon_start', arguments: { title: 'Not allowed' } });
+  assert.equal(result.isError, true); assert.match(result.content[0].text, /Configure/);
+});
