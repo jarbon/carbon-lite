@@ -41,3 +41,9 @@ requests and meet applicable obligations.
 
 Changes to this policy are dated in this repository. Review the policy and source
 of each release before installing it.
+
+<!-- jay-background -->
+## Optional Jay background checks
+
+After an explicit per-project choice and host hook trust, Jay checks changed code during breaks. Defaults: 2-minute idle delay, 3-minute runs, maximum 10 minutes per run, one worker, 3 runs and 10 reserved minutes per UTC day across projects. No automatic fixes or live-site testing. Local checks and outcome counts stay on this machine. Optional Claude-only AI source review requires separate consent to provider processing and allowance use. Codex checks do not launch Claude. Use `carbon-background` to enable, pause, review, or disable everywhere. See [behavior, controls and privacy](background/README.md). Unsupported hosts retain manual testing.
+<!-- /jay-background -->

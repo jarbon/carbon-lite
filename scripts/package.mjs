@@ -5,8 +5,8 @@ import { execFileSync } from "node:child_process";
 import { validateCapabilities } from "./validate-listing.mjs";
 const manifest = JSON.parse(fs.readFileSync(".codex-plugin/plugin.json"));
 validateCapabilities(manifest);
-if (manifest.mcpServers || manifest.apps || manifest.hooks)
-  throw Error("Skills-only package must not register servers, apps or hooks.");
+if (manifest.mcpServers || manifest.apps || manifest.hooks !== './hooks/codex.json')
+  throw Error("Lite must have only the reviewed local hooks; no servers or apps.");
 const release = path.resolve(
   "output/releases",
   `${manifest.version}-${new Date().toISOString().replace(/[:.]/g, "-")}`,
@@ -16,6 +16,8 @@ fs.mkdirSync(stage, { recursive: true });
 for (const file of [
   ".codex-plugin",
   "skills",
+  "background",
+  "hooks",
   "scripts",
   "src",
   "assets",

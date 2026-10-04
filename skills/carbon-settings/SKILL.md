@@ -15,3 +15,7 @@ Read [the shared workflow](../../references/workflow.md) before an investigation
 
 Use available, authorized host tools. The plugin cannot add browser or terminal capabilities. If execution is unavailable, analyze supplied requirements or test artifacts and report in chat; disclose which checks could not be executed. Never require a local helper merely to provide a useful analysis.
 
+
+<!-- jay-background -->
+For background setup, pause, disable-everywhere or result review, follow [carbon-background](../carbon-background/SKILL.md). These enforced background limits are separate from foreground testing preferences.
+<!-- /jay-background -->

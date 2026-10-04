@@ -168,17 +168,18 @@ test("no project-wide ambient writes or listening process; malformed requests fa
   assert(!fs.existsSync(path.join(root, ".carbon")));
   assert.throws(() => call("start", { root: "relative", title: "bad" }));
 });
-test("manifest includes Jay entrypoints without adding MCP/hook/app declarations", () => {
+test("manifest includes Jay and bounded background entrypoints without MCP/apps", () => {
   const m = JSON.parse(
     fs.readFileSync(path.join(plugin, ".codex-plugin/plugin.json")),
   );
   assert.equal(m.license, "MIT");
   assert.equal(m.name, "carbon-lite");
   for (const field of ['supportURL', 'privacyPolicyURL', 'termsOfServiceURL']) assert(m.interface[field].startsWith('https://github.com/jarbon/carbon-lite/'));
-  assert(!m.mcpServers && !m.hooks && !m.apps);
+  assert(!m.mcpServers && !m.apps);
+  assert.equal(m.hooks, './hooks/codex.json');
   const dirs = fs.readdirSync(path.join(plugin, "skills"));
-  assert.deepEqual([...dirs].sort(), ['carbon','carbon-accessibility','carbon-demo','carbon-help','carbon-issues','carbon-map','carbon-settings','carbon-studio','carbon-test','j','jay'].sort());
-  assert.equal(dirs.length, 11);
+  assert.deepEqual([...dirs].sort(), ['carbon','carbon-background','carbon-accessibility','carbon-demo','carbon-help','carbon-issues','carbon-map','carbon-settings','carbon-studio','carbon-test','j','jay'].sort());
+  assert.equal(dirs.length, 12);
   for (const d of dirs) {
     const s = fs.readFileSync(
       path.join(plugin, "skills", d, "SKILL.md"),

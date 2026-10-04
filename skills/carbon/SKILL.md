@@ -1,6 +1,6 @@
 ---
 name: carbon
-description: "Assess a project, URL, requirements or supplied test evidence using CARBON Lite's bounded risk-based testing method."
+description: "Test a project or verify a recent feature or bug fix with Jay: risk-based checks, reproducible findings and confidence in a visual report. Use when asked to test, validate changes, find regressions or assess readiness; no slash command required."
 ---
 
 <!-- jay-voice -->
@@ -16,3 +16,7 @@ Start with customer intent and existing requirements/tests. Select checks by con
 Read [the shared workflow](../../references/workflow.md) before an investigation or any local helper action. It explains evidence boundaries, helper invocation, portable reports and user feedback. Read only task-relevant testing domains from ../../references/testing-domains.json.
 
 Use available, authorized host tools. The plugin cannot add browser or terminal capabilities. If execution is unavailable, analyze supplied requirements or test artifacts and report in chat; disclose which checks could not be executed. Never require a local helper merely to provide a useful analysis.
+
+<!-- jay-background -->
+For first-use quick assessment, automatic selection and optional background setup, read [first-use guidance](../../background/first-use.md). Explicit user scope and limits take precedence.
+<!-- /jay-background -->

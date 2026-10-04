@@ -1,4 +1,4 @@
-# CARBON Lite — skills-only edition
+# CARBON Lite — local skills and optional background checks
 
 The eight CARBON Lite workflows plus a portable Studio workspace. Open source under MIT,
 readable JavaScript. No MCP server, OAuth, account, analytics, hosted service or
@@ -85,7 +85,7 @@ The ZIP contains the manifest, skills, runnable helper, full source, bundled tes
 reference catalogs, fixture code and third-party notices. It excludes node_modules,
 local evidence, test outputs, credentials and private benchmark data.
 
-See [SUBMISSION.md](SUBMISSION.md) for the skills-only review path and remaining
+See [SUBMISSION.md](SUBMISSION.md) for the local skills/hooks review path and remaining
 portal checks. Building a ZIP is not marketplace acceptance or publication.
 
 <!-- jay-entrypoints:start -->
@@ -118,3 +118,9 @@ Jay's bundled icon appears in compatible command pickers and CARBON report views
 Host chat avatars and image sizing are host-controlled; text-only chat uses
 “Jay · AI test manager” instead of a large image.
 <!-- jay-entrypoints:end -->
+
+<!-- jay-background -->
+## Optional Jay background checks
+
+After an explicit per-project choice and host hook trust, Jay checks changed code during breaks. Defaults: 2-minute idle delay, 3-minute runs, maximum 10 minutes per run, one worker, 3 runs and 10 reserved minutes per UTC day across projects. No automatic fixes or live-site testing. Local checks and outcome counts stay on this machine. Optional Claude-only AI source review requires separate consent to provider processing and allowance use. Codex checks do not launch Claude. Use `carbon-background` to enable, pause, review, or disable everywhere. See [behavior, controls and privacy](background/README.md). Unsupported hosts retain manual testing.
+<!-- /jay-background -->

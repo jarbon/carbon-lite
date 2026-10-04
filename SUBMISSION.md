@@ -1,14 +1,16 @@
 # Marketplace submission checklist
 
-Candidate: CARBON Lite 0.1.5, MIT, skills-only. No MCP configuration,
-app references, lifecycle hooks, obfuscation, analytics or hosted account.
+Candidate: CARBON Lite 0.1.7, MIT, skills and optional local lifecycle hooks. No MCP
+configuration, app references, obfuscation, remote analytics or hosted account.
+The new hooks require host trust and an explicit per-project setup choice. They run
+bounded local checks, not an autonomous model loop. See background/README.md.
 
 Official references checked 2026-10-03:
 - https://developers.openai.com/plugins/guides/submit-claude-plugin
 - https://developers.openai.com/plugins/deploy/submission
 - https://developers.openai.com/plugins/build/skills
 
-OpenAI documents a skills-only route supporting scripts, references and assets.
+This package uses skills, scripts, references and assets, plus explicit trusted local hooks for optional background checks and per-chat reminders.
 Submit the generated ZIP at https://platform.openai.com/plugins using Skills only.
 Create a new plugin draft for Lite, not an update to the full Studio draft.
 Complete owner identity verification, listing and scans, then submit for review.

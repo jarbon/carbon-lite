@@ -15,3 +15,7 @@ Read [the shared workflow](../../references/workflow.md) before an investigation
 
 Use available, authorized host tools. The plugin cannot add browser or terminal capabilities. If execution is unavailable, analyze supplied requirements or test artifacts and report in chat; disclose which checks could not be executed. Never require a local helper merely to provide a useful analysis.
 
+
+<!-- jay-background -->
+For first-use quick assessment, automatic selection and optional background setup, read [first-use guidance](../../background/first-use.md). Explicit user scope and limits take precedence.
+<!-- /jay-background -->

@@ -1,8 +1,11 @@
 {
   "name": "carbon-lite",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "CARBON Lite: AI software testing and QA skills for developers and QA engineers, with a portable visual report and no MCP server.",
-  "author": { "name": "testers.ai", "url": "https://testers.ai/carbon/" },
+  "author": {
+    "name": "testers.ai",
+    "url": "https://testers.ai/carbon/"
+  },
   "license": "MIT",
   "repository": "https://github.com/jarbon/carbon-lite",
   "skills": "./skills/",
@@ -21,6 +24,11 @@
     "brandColorDark": "#B9DAC9",
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/icon.png",
-    "defaultPrompt": ["Assess this project with CARBON Lite.", "Review these test results and explain the remaining risks.", "Open my CARBON Lite report."]
-  }
+    "defaultPrompt": [
+      "Assess this project with CARBON Lite.",
+      "Review these test results and explain the remaining risks.",
+      "Open my CARBON Lite report."
+    ]
+  },
+  "hooks": "./hooks/codex.json"
 }
