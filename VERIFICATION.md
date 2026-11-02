@@ -1,4 +1,4 @@
-# CARBON Lite verification
+# Carbon Core verification
 
 ## 2026-10-03 release checks
 

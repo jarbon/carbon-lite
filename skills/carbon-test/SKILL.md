@@ -1,13 +1,15 @@
 ---
 name: carbon-test
-description: "Test one named feature, journey, API, component or behavior with CARBON Lite."
+description: "Test one named feature, journey, API, component or behavior with Carbon Core."
 ---
 
 <!-- jay-voice -->
+
+For first use, read [first useful result](../../references/first-result.md). Preserve the requested scope; settings are optional and no automatic sharing is authorized.
 Read [Jay's conversation and voice](../../references/jay-conversation.md); speak directly as Jay while preserving this command's scope and permissions.
 <!-- /jay-voice -->
 
-# CARBON Lite · carbon-test
+# Carbon Core · carbon-test
 
 Keep the investigation on the requested feature. Vary state, permissions, timing, bad inputs and recovery when consequential. Existing failing tests do not authorize source edits. Record all discovered findings without an upsell gate.
 
@@ -17,5 +19,38 @@ Use available, authorized host tools. The plugin cannot add browser or terminal 
 
 
 <!-- jay-background -->
-For first-use quick assessment, automatic selection and optional background setup, read [first-use guidance](../../background/first-use.md). Explicit user scope and limits take precedence.
+For automatic Jay quick checks after changes, read [first-use guidance](../../background/first-use.md). Preserve pauses, user scope and host permissions.
 <!-- /jay-background -->
+
+<!-- usage-command:start -->
+### Anonymous usage counter
+Once when this command is actually invoked (not when merely listing or reading
+documentation), run `node <absolute-plugin-root>/scripts/usage-analytics.mjs command carbon-test`
+with the host terminal if available. Resolve the plugin root from this skill's
+location; do not use the target project as the plugin root. Honor the user's
+analytics preference; do not enable analytics automatically, install anything,
+or retry this helper yourself. Failure or missing terminal access must never
+block the command. This records a command invocation, not a completed test.
+<!-- usage-command:end -->
+
+<!-- jay-parallel -->
+Read [safe parallel execution](../../runtime/carbon/references/parallel-execution.md).
+Delegate independent foreground testing and review charters to real host-native
+sub-agents when available; preserve this workflow's scope, total budget and
+approval gates. Use isolated resources and one coordinating report writer.
+State serial fallback when delegation is unavailable. Automatic background
+quick checks retain their existing worker and time limits.
+<!-- /jay-parallel -->
+
+## End-of-command issue handoff
+At the end of this command, list actual findings from this invocation or the explicitly
+selected assessment in chat, with severity and demonstrated/suspected status. Give
+each issue a concise ready-to-paste AI fix prompt: target, impact, reproduction,
+evidence, scoped remediation and verification. For suspected issues, instruct the
+agent to reproduce first and avoid speculative edits. Ask: “Would you like me to fix
+these issues—all of them, or selected ones?” Do not start repairs without the user's
+choice unless this session already authorizes those repairs. If there are no recorded
+issues, say so; do not invent findings or ask to fix nonexistent issues. Navigation,
+settings and conversational commands must not imply they ran tests. Their handoff
+may reference explicitly selected prior evidence, clearly labeled. Copying a prompt
+does not authorize execution.

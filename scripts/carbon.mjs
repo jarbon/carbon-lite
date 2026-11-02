@@ -4,14 +4,28 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// src/cli.mjs
-import fs4 from "node:fs";
-import path4 from "node:path";
-import { fileURLToPath } from "node:url";
-
-// src/store.mjs
+// src/target.mjs
 import fs from "node:fs";
 import path from "node:path";
+var targetQuestion = "What would you like CARBON to test? Share a website URL, a local folder or repository, an API endpoint, an app or feature, or requirements/files to review.";
+var ignored = /* @__PURE__ */ new Set([".carbon", ".git", ".claude", ".codex", ".DS_Store", "AGENTS.md", "CLAUDE.md"]);
+var generic = /* @__PURE__ */ new Set(["", ".", "./", "auto", "auto-detect local target", "current project", "current workspace", "current directory", "current project and requested context", "test this", "this", "here"]);
+function requireTarget(root, target = "") {
+  const value = String(target ?? "").trim();
+  let same = generic.has(value.toLowerCase()) || value.replace(/\/$/, "") === path.resolve(root).replace(/\/$/, "");
+  if (value && fs.existsSync(value)) same = same || fs.realpathSync(value) === fs.realpathSync(root);
+  if (!same || fs.readdirSync(root).some((n) => !ignored.has(n))) return;
+  throw new Error("TARGET_REQUIRED: " + targetQuestion);
+}
+
+// src/cli.mjs
+import fs6 from "node:fs";
+import path6 from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+// src/store.mjs
+import fs2 from "node:fs";
+import path2 from "node:path";
 import crypto from "node:crypto";
 
 // node_modules/zod/v4/classic/external.js
@@ -780,10 +794,10 @@ function mergeDefs(...defs) {
 function cloneDef(schema) {
   return mergeDefs(schema._zod.def);
 }
-function getElementAtPath(obj, path5) {
-  if (!path5)
+function getElementAtPath(obj, path7) {
+  if (!path7)
     return obj;
-  return path5.reduce((acc, key) => acc?.[key], obj);
+  return path7.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -1192,11 +1206,11 @@ function explicitlyAborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path5, issues) {
+function prefixIssues(path7, issues) {
   return issues.map((iss) => {
     var _a3;
     (_a3 = iss).path ?? (_a3.path = []);
-    iss.path.unshift(path5);
+    iss.path.unshift(path7);
     return iss;
   });
 }
@@ -1343,16 +1357,16 @@ function flattenError(error51, mapper = (issue2) => issue2.message) {
 }
 function formatError(error51, mapper = (issue2) => issue2.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error52, path5 = []) => {
+  const processError = (error52, path7 = []) => {
     for (const issue2 of error52.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path5, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path7, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path5, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path5, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else {
-        const fullpath = [...path5, ...issue2.path];
+        const fullpath = [...path7, ...issue2.path];
         if (fullpath.length === 0) {
           fieldErrors._errors.push(mapper(issue2));
         } else {
@@ -1379,17 +1393,17 @@ function formatError(error51, mapper = (issue2) => issue2.message) {
 }
 function treeifyError(error51, mapper = (issue2) => issue2.message) {
   const result = { errors: [] };
-  const processError = (error52, path5 = []) => {
+  const processError = (error52, path7 = []) => {
     var _a3, _b;
     for (const issue2 of error52.issues) {
       if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path5, ...issue2.path]));
+        issue2.errors.map((issues) => processError({ issues }, [...path7, ...issue2.path]));
       } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path5, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path5, ...issue2.path]);
+        processError({ issues: issue2.issues }, [...path7, ...issue2.path]);
       } else {
-        const fullpath = [...path5, ...issue2.path];
+        const fullpath = [...path7, ...issue2.path];
         if (fullpath.length === 0) {
           result.errors.push(mapper(issue2));
           continue;
@@ -1421,8 +1435,8 @@ function treeifyError(error51, mapper = (issue2) => issue2.message) {
 }
 function toDotPath(_path) {
   const segs = [];
-  const path5 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
-  for (const seg of path5) {
+  const path7 = _path.map((seg) => typeof seg === "object" ? seg.key : seg);
+  for (const seg of path7) {
     if (typeof seg === "number")
       segs.push(`[${seg}]`);
     else if (typeof seg === "symbol")
@@ -14114,13 +14128,13 @@ function resolveRef(ref, ctx) {
   if (!ref.startsWith("#")) {
     throw new Error("External $ref is not supported, only local refs (#/...) are allowed");
   }
-  const path5 = ref.slice(1).split("/").filter(Boolean);
-  if (path5.length === 0) {
+  const path7 = ref.slice(1).split("/").filter(Boolean);
+  if (path7.length === 0) {
     return ctx.rootSchema;
   }
   const defsKey = ctx.version === "draft-2020-12" ? "$defs" : "definitions";
-  if (path5[0] === defsKey) {
-    const key = path5[1];
+  if (path7[0] === defsKey) {
+    const key = path7[1];
     if (!key || !ctx.defs[key]) {
       throw new Error(`Reference not found: ${ref}`);
     }
@@ -14551,6 +14565,8 @@ var settingsSchema = external_exports.strictObject(settingFields);
 var text = external_exports.string().max(6e3);
 var evidence = external_exports.array(external_exports.string().max(2e3)).max(20);
 var checkSchema = external_exports.strictObject({
+  screenshotPageIds: external_exports.array(external_exports.string().min(1).max(80)).max(100).optional(),
+  agent: external_exports.string().trim().min(1).max(80).optional(),
   id: external_exports.string().min(1).max(80),
   title: text,
   domain: external_exports.string().max(80),
@@ -14598,6 +14614,7 @@ var updateSchema = external_exports.strictObject({
   runId: external_exports.string().regex(/^run-[a-f0-9]{16}$/),
   revision: external_exports.number().int().min(0),
   current: text.optional(),
+  inspection: external_exports.strictObject({ kind: external_exports.enum(["screen", "file"]), target: text.min(1), lookingFor: text.min(1), pageId: external_exports.string().max(80).optional(), excerpt: external_exports.string().max(3e3).optional() }).optional(),
   why: text.optional(),
   summary: text.optional(),
   status: external_exports.enum(["running", "waiting", "completed", "partial", "blocked", "canceled"]).optional(),
@@ -14608,6 +14625,7 @@ var updateSchema = external_exports.strictObject({
     external_exports.strictObject({
       id: external_exports.string().min(1).max(80),
       role: text,
+      screenshotPageIds: external_exports.array(external_exports.string().min(1).max(80)).max(100).optional(),
       intent: text,
       journey: text,
       observation: text,
@@ -14623,33 +14641,33 @@ var updateSchema = external_exports.strictObject({
   }).optional()
 });
 function safeDir(dir) {
-  const full = path.resolve(dir);
-  let current = path.parse(full).root;
-  for (const part of full.slice(current.length).split(path.sep).filter(Boolean)) {
-    current = path.join(current, part);
-    if (fs.existsSync(current) && fs.lstatSync(current).isSymbolicLink())
+  const full = path2.resolve(dir);
+  let current = path2.parse(full).root;
+  for (const part of full.slice(current.length).split(path2.sep).filter(Boolean)) {
+    current = path2.join(current, part);
+    if (fs2.existsSync(current) && fs2.lstatSync(current).isSymbolicLink())
       throw Error("State directories must not be symbolic links.");
   }
-  fs.mkdirSync(full, { recursive: true, mode: 448 });
+  fs2.mkdirSync(full, { recursive: true, mode: 448 });
   return full;
 }
 var Store = class {
   constructor(dir) {
-    if (!dir || !path.isAbsolute(dir))
+    if (!dir || !path2.isAbsolute(dir))
       throw Error("An explicit absolute state directory is required.");
     this.dir = safeDir(dir);
-    this.file = path.join(this.dir, "workspace.json");
-    this.lock = path.join(this.dir, "write.lock");
+    this.file = path2.join(this.dir, "workspace.json");
+    this.lock = path2.join(this.dir, "write.lock");
   }
   read() {
-    if (fs.existsSync(this.file) && fs.lstatSync(this.file).isSymbolicLink())
+    if (fs2.existsSync(this.file) && fs2.lstatSync(this.file).isSymbolicLink())
       throw Error("State file cannot be a symbolic link.");
-    return fs.existsSync(this.file) ? JSON.parse(fs.readFileSync(this.file, "utf8")) : { schema: 1, revision: 0, settings: defaults, runs: [], steering: [] };
+    return fs2.existsSync(this.file) ? JSON.parse(fs2.readFileSync(this.file, "utf8")) : { schema: 1, revision: 0, settings: defaults, runs: [], steering: [] };
   }
   mutate(fn) {
     let fd;
     try {
-      fd = fs.openSync(this.lock, "wx", 384);
+      fd = fs2.openSync(this.lock, "wx", 384);
     } catch {
       throw Error("Workspace is busy. Retry after the current save finishes.");
     }
@@ -14657,17 +14675,17 @@ var Store = class {
       const s = this.read();
       const result = fn(s);
       s.revision++;
-      const temp = path.join(this.dir, crypto.randomUUID() + ".tmp");
+      const temp = path2.join(this.dir, crypto.randomUUID() + ".tmp");
       try {
-        fs.writeFileSync(temp, JSON.stringify(s), { mode: 384, flag: "wx" });
-        fs.renameSync(temp, this.file);
+        fs2.writeFileSync(temp, JSON.stringify(s), { mode: 384, flag: "wx" });
+        fs2.renameSync(temp, this.file);
       } finally {
-        if (fs.existsSync(temp)) fs.unlinkSync(temp);
+        if (fs2.existsSync(temp)) fs2.unlinkSync(temp);
       }
       return result ?? s;
     } finally {
-      fs.closeSync(fd);
-      fs.unlinkSync(this.lock);
+      fs2.closeSync(fd);
+      fs2.unlinkSync(this.lock);
     }
   }
   settings(patch, revision) {
@@ -14683,9 +14701,10 @@ var Store = class {
     });
   }
   start({ root, title, target }) {
-    if (!path.isAbsolute(root) || !fs.statSync(root).isDirectory())
+    if (!path2.isAbsolute(root) || !fs2.statSync(root).isDirectory())
       throw Error("Select an existing absolute project directory.");
-    root = fs.realpathSync(root);
+    root = fs2.realpathSync(root);
+    requireTarget(root, target);
     return this.mutate((s) => {
       const run = {
         id: "run-" + crypto.randomBytes(8).toString("hex"),
@@ -14753,10 +14772,49 @@ var Store = class {
         );
       for (const k of ["current", "why", "status", "blockers", "confidence"])
         if (v[k] !== void 0) r[k] = v[k];
+      if (v.inspection) r.inspection = { ...v.inspection, at: (/* @__PURE__ */ new Date()).toISOString() };
       r.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
       r.revision++;
       if (v.summary) r.history.unshift({ at: r.updatedAt, text: v.summary });
       r.history = r.history.slice(0, 100);
+      return r;
+    });
+  }
+  addPersonaFeedback(args) {
+    const v = external_exports.strictObject({
+      runId: external_exports.string().regex(/^run-[a-f0-9]{16}$/),
+      revision: external_exports.number().int().min(0),
+      personaId: external_exports.string().min(1).max(80),
+      overallRating: external_exports.number().int().min(1).max(5),
+      rationale: text.min(1),
+      feedback: external_exports.array(external_exports.strictObject({ category: text.min(1), rating: external_exports.number().int().min(1).max(5), observation: text.min(1), evidence: evidence.min(1) })).min(1).max(20)
+    }).parse(args);
+    return this.mutate((s) => {
+      const r = s.runs.find((x) => x.id === v.runId);
+      if (!r) throw Error("Run not found.");
+      if (r.revision !== v.revision) throw Error("Run changed. Read the latest revision before updating.");
+      if (!r.personas.some((p) => p.id === v.personaId)) throw Error("Persona not found.");
+      const { runId, revision, ...review } = v;
+      r.personaReviews = [...r.personaReviews || [], { ...review, at: (/* @__PURE__ */ new Date()).toISOString() }];
+      r.revision++;
+      return r;
+    });
+  }
+  addRiskAnalysis(args) {
+    const v = external_exports.strictObject({
+      runId: external_exports.string().regex(/^run-[a-f0-9]{16}$/),
+      revision: external_exports.number().int().min(0),
+      summary: text,
+      limitations: external_exports.array(text).max(20),
+      risks: external_exports.array(external_exports.strictObject({ title: text, priority: external_exports.enum(["high", "medium", "low"]), consequence: text, evidence, remaining: text, next: text })).min(1).max(20)
+    }).parse(args);
+    return this.mutate((s) => {
+      const r = s.runs.find((r2) => r2.id === v.runId);
+      if (!r) throw Error("Run not found.");
+      if (r.revision !== v.revision) throw Error("Run changed. Read the latest revision before updating.");
+      const { runId, revision, ...analysis } = v;
+      r.riskAnalyses = [...r.riskAnalyses || [], { ...analysis, at: (/* @__PURE__ */ new Date()).toISOString() }];
+      r.revision++;
       return r;
     });
   }
@@ -14767,13 +14825,13 @@ var Store = class {
       if (!p) throw Error("Run or page not found.");
       if (["completed", "partial", "canceled"].includes(r.status))
         throw Error("Run is closed.");
-      const real = fs.realpathSync(path.resolve(r.root, file2));
-      if (!real.startsWith(r.root + path.sep))
+      const real = fs2.realpathSync(path2.resolve(r.root, file2));
+      if (!real.startsWith(r.root + path2.sep))
         throw Error("Screenshots must be inside the selected project.");
-      const stat = fs.statSync(real);
+      const stat = fs2.statSync(real);
       if (stat.size > 5e6 || !stat.isFile())
         throw Error("Use an image smaller than 5 MB.");
-      const b = fs.readFileSync(real);
+      const b = fs2.readFileSync(real);
       let mime;
       if (b.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])))
         mime = "image/png";
@@ -14850,7 +14908,7 @@ var Store = class {
       ...s,
       runs: s.runs.map(({ root, ...r }) => ({
         ...r,
-        project: path.basename(root)
+        project: path2.basename(root)
       })),
       receivedAt: (/* @__PURE__ */ new Date()).toISOString()
     };
@@ -14858,13 +14916,13 @@ var Store = class {
 };
 
 // src/report.mjs
-import fs2 from "node:fs";
-import path2 from "node:path";
+import fs3 from "node:fs";
+import path3 from "node:path";
 import crypto2 from "node:crypto";
 function exportWorkspace(store, plugin2) {
   const snapshot = store.snapshot();
-  const template = fs2.readFileSync(
-    path2.join(plugin2, "dist/workspace-template.html"),
+  const template = fs3.readFileSync(
+    path3.join(plugin2, "dist/workspace-template.html"),
     "utf8"
   );
   const data = JSON.stringify(snapshot).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026");
@@ -14873,32 +14931,32 @@ function exportWorkspace(store, plugin2) {
     ["workspace.json", JSON.stringify(snapshot, null, 2)],
     ["index.html", html]
   ]) {
-    const dest = path2.join(store.dir, "reports");
-    if (fs2.existsSync(dest) && fs2.lstatSync(dest).isSymbolicLink())
+    const dest = path3.join(store.dir, "reports");
+    if (fs3.existsSync(dest) && fs3.lstatSync(dest).isSymbolicLink())
       throw Error("Report directory cannot be a symlink.");
-    fs2.mkdirSync(dest, { recursive: true, mode: 448 });
-    const target = path2.join(dest, name), temp = path2.join(dest, crypto2.randomUUID() + ".tmp");
-    if (fs2.existsSync(target) && fs2.lstatSync(target).isSymbolicLink())
+    fs3.mkdirSync(dest, { recursive: true, mode: 448 });
+    const target = path3.join(dest, name), temp = path3.join(dest, crypto2.randomUUID() + ".tmp");
+    if (fs3.existsSync(target) && fs3.lstatSync(target).isSymbolicLink())
       throw Error("Report files cannot be symlinks.");
-    fs2.writeFileSync(temp, contents, { flag: "wx", mode: 384 });
-    fs2.renameSync(temp, target);
+    fs3.writeFileSync(temp, contents, { flag: "wx", mode: 384 });
+    fs3.renameSync(temp, target);
   }
   return {
-    html: path2.join(store.dir, "reports/index.html"),
-    snapshot: path2.join(store.dir, "reports/workspace.json"),
+    html: path3.join(store.dir, "reports/index.html"),
+    snapshot: path3.join(store.dir, "reports/workspace.json"),
     revision: snapshot.revision,
-    note: "Local portable snapshot. Reload after updates, or select workspace.json in the report to watch it. Feedback must be exported and explicitly imported."
+    note: "Portable HTML is a saved snapshot. The protected live viewer refreshes evidence automatically every two seconds while visible and pauses for unsaved feedback. Offline, reload the HTML or select workspace.json to watch it. Feedback must be exported and explicitly imported."
   };
 }
 
 // src/demo.mjs
-import fs3 from "node:fs";
-import path3 from "node:path";
+import fs4 from "node:fs";
+import path4 from "node:path";
 import crypto3 from "node:crypto";
 function demo(plugin2, root, args) {
-  const fixtures = path3.join(plugin2, "demo-fixtures");
+  const fixtures = path4.join(plugin2, "demo-fixtures");
   const manifest = JSON.parse(
-    fs3.readFileSync(path3.join(fixtures, "manifest.json"))
+    fs4.readFileSync(path4.join(fixtures, "manifest.json"))
   );
   if (args.action === "list") return manifest;
   if (args.action !== "create") throw Error("Use action list or create.");
@@ -14912,31 +14970,31 @@ function demo(plugin2, root, args) {
   const name = args.destination || `carbon-demo-${fixture.id}-${crypto3.randomBytes(4).toString("hex")}`;
   if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,100}$/.test(name))
     throw Error("Destination must be a new folder name, not a path.");
-  const destination = path3.join(root, name);
-  fs3.mkdirSync(destination, { mode: 448 });
-  const source = path3.join(fixtures, fixture.id);
+  const destination = path4.join(root, name);
+  fs4.mkdirSync(destination, { mode: 448 });
+  const source = path4.join(fixtures, fixture.id);
   function copy(from, to, rel = "") {
-    for (const item of fs3.readdirSync(from, { withFileTypes: true })) {
+    for (const item of fs4.readdirSync(from, { withFileTypes: true })) {
       const next = rel ? `${rel}/${item.name}` : item.name;
       if (profile === "without-existing-tests" && fixture.testPaths.some((t) => next === t || next.startsWith(t + "/")))
         continue;
       if (item.isSymbolicLink())
         throw Error("Fixture symlinks are not supported.");
-      const target = path3.join(to, item.name);
+      const target = path4.join(to, item.name);
       if (item.isDirectory()) {
-        fs3.mkdirSync(target);
-        copy(path3.join(from, item.name), target, next);
+        fs4.mkdirSync(target);
+        copy(path4.join(from, item.name), target, next);
       } else if (item.isFile())
-        fs3.copyFileSync(
-          path3.join(from, item.name),
+        fs4.copyFileSync(
+          path4.join(from, item.name),
           target,
-          fs3.constants.COPYFILE_EXCL
+          fs4.constants.COPYFILE_EXCL
         );
     }
   }
   copy(source, destination);
-  fs3.writeFileSync(
-    path3.join(destination, ".carbon-demo.json"),
+  fs4.writeFileSync(
+    path4.join(destination, ".carbon-demo.json"),
     JSON.stringify(
       {
         fixture: fixture.id,
@@ -14957,15 +15015,106 @@ function demo(plugin2, root, args) {
   };
 }
 
+// src/report-viewer.mjs
+import { fork } from "node:child_process";
+function launchReportViewer(file2, script) {
+  return new Promise((resolve, reject) => {
+    const child = fork(script, [file2], { detached: true, execArgv: [], stdio: ["ignore", "ignore", "ignore", "ipc"] });
+    const timer = setTimeout(() => {
+      child.kill();
+      reject(Error("Report viewer startup timed out."));
+    }, 5e3);
+    child.once("error", (error51) => {
+      clearTimeout(timer);
+      reject(error51);
+    });
+    child.once("exit", (code) => {
+      clearTimeout(timer);
+      reject(Error(`Report viewer exited (${code}).`));
+    });
+    child.once("message", (message) => {
+      clearTimeout(timer);
+      child.disconnect();
+      child.unref();
+      if (message.error) reject(Error(message.error));
+      else resolve(message);
+    });
+  });
+}
+
+// src/funnel.mjs
+import fs5 from "node:fs";
+import path5 from "node:path";
+import os from "node:os";
+import { createHash, randomUUID } from "node:crypto";
+function createFunnel({ home = os.homedir(), env = process.env, clock = Date.now, usage, edition = "free" } = {}) {
+  const dir = path5.join(home, ".config/carbon/funnel", edition), file2 = path5.join(dir, "milestones.json");
+  const read = (f) => {
+    try {
+      return JSON.parse(fs5.readFileSync(f, "utf8"));
+    } catch {
+      return {};
+    }
+  };
+  const enabled = () => read(path5.join(home, ".config/carbon/config.json")).funnelAnalyticsEnabled === true && usage.enabled() && !/^(1|true|yes|on)$/i.test(env.DO_NOT_TRACK || "") && !/^(0|false|no|off)$/i.test(env.CARBON_ANALYTICS || "");
+  async function record2(kind, key = "") {
+    try {
+      if (!enabled()) return;
+      if (kind === "interest") {
+        await usage.record("Pro Interest");
+        return;
+      }
+      if (kind !== "completed" || !key) return;
+      fs5.mkdirSync(dir, { recursive: true, mode: 448 });
+      const lock = file2 + ".lock";
+      let fd;
+      try {
+        fd = fs5.openSync(lock, "wx", 384);
+      } catch {
+        return;
+      }
+      try {
+        const s = read(file2), day = new Date(clock()).toISOString().slice(0, 10), id = createHash("sha256").update(key).digest("hex");
+        if (s.seen?.includes(id)) return;
+        const first = !s.firstDay, repeat = !first && !s.returned && day > s.firstDay;
+        s.firstDay ??= day;
+        s.returned ||= repeat;
+        s.seen = [...s.seen || [], id].slice(-1e3);
+        const temp = file2 + "." + randomUUID();
+        fs5.writeFileSync(temp, JSON.stringify(s), { mode: 384 });
+        fs5.renameSync(temp, file2);
+        if (first) await usage.record("First Completed Run", "", "funnel-first-completion");
+        if (repeat) await usage.record("Return On Another Day", "", "funnel-return-day");
+      } finally {
+        fs5.closeSync(fd);
+        fs5.unlinkSync(lock);
+      }
+    } catch {
+    }
+  }
+  function clear() {
+    try {
+      fs5.unlinkSync(file2);
+    } catch {
+    }
+  }
+  return { record: record2, enabled, clear };
+}
+
 // src/cli.mjs
-var plugin = path4.resolve(path4.dirname(fileURLToPath(import.meta.url)), "..");
+var plugin = path6.resolve(path6.dirname(fileURLToPath(import.meta.url)), "..");
 var actions = [
   "start",
   "update",
+  "risk-analysis",
+  "persona-feedback",
   "snapshot",
   "report",
+  "view",
   "screenshot",
   "settings",
+  "settings-view",
+  "setup-status",
   "feedback",
   "demo"
 ];
@@ -14974,13 +15123,16 @@ function execute(action, input) {
     throw Error("Unknown action. Use: " + actions.join(", "));
   if (!input || Array.isArray(input) || typeof input !== "object")
     throw Error("Expected a JSON object.");
-  if (typeof input.root !== "string" || !path4.isAbsolute(input.root))
+  if (typeof input.root !== "string" || !path6.isAbsolute(input.root))
     throw Error("Use an explicit absolute project root.");
-  const root = fs4.realpathSync(input.root);
-  if (!fs4.statSync(root).isDirectory())
+  const root = fs6.realpathSync(input.root);
+  if (!fs6.statSync(root).isDirectory())
     throw Error("Project root must be a directory.");
   if (action === "demo") return demo(plugin, root, input);
-  const store = new Store(path4.join(root, ".carbon/studio-lite"));
+  if (action === "setup-status") return import(pathToFileURL(path6.join(plugin, "background/onboarding.mjs")).href).then((m) => m.readSettings(root, { edition: "codex-lite", home: process.env.CARBON_BACKGROUND_TEST_HOME }));
+  if (action === "settings-view") return launchReportViewer(root, path6.join(plugin, "scripts/settings-viewer.mjs"));
+  if (action === "start") requireTarget(root, input.target);
+  const store = new Store(path6.join(root, ".carbon/studio-lite"));
   let result;
   const { root: unused, ...args } = input;
   if (action === "start") {
@@ -14993,6 +15145,8 @@ function execute(action, input) {
     });
   }
   if (action === "update") result = store.update(args);
+  if (action === "persona-feedback") result = store.addPersonaFeedback(args);
+  if (action === "risk-analysis") result = store.addRiskAnalysis(args);
   if (action === "screenshot") result = store.screenshot(args);
   if (action === "settings") {
     if (args.patch && !Number.isInteger(args.revision))
@@ -15020,20 +15174,21 @@ function execute(action, input) {
     return snapshot;
   }
   const files = exportWorkspace(store, plugin);
+  if (action === "view") return launchReportViewer(files.html, path6.join(plugin, "scripts/report-viewer.mjs")).then((presentation) => ({ ...files, ...presentation }));
   if (action === "report") return files;
   return {
     result: action === "start" || action === "update" || action === "screenshot" ? { runId: result.id, revision: result.revision, status: result.status } : action === "settings" ? result : { saved: true },
     ...files
   };
 }
-if (process.argv[1] && fs4.realpathSync(process.argv[1]) === fs4.realpathSync(fileURLToPath(import.meta.url))) {
+if (process.argv[1] && fs6.realpathSync(process.argv[1]) === fs6.realpathSync(fileURLToPath(import.meta.url))) {
   try {
     if (process.argv.length !== 4)
       throw Error(
-        "Usage: node scripts/carbon.mjs ACTION input.json (or - for stdin). No server is started."
+        "Usage: node scripts/carbon.mjs ACTION input.json (or - for stdin). Only view and settings-view start temporary local viewers."
       );
     const inputFile = process.argv[3];
-    if (inputFile !== "-" && fs4.statSync(inputFile).size > 12e6)
+    if (inputFile !== "-" && fs6.statSync(inputFile).size > 12e6)
       throw Error("Input exceeds 12 MB.");
     let content = "";
     if (inputFile === "-")
@@ -15041,10 +15196,22 @@ if (process.argv[1] && fs4.realpathSync(process.argv[1]) === fs4.realpathSync(fi
         content += chunk;
         if (content.length > 12e6) throw Error("Input exceeds 12 MB.");
       }
-    else content = fs4.readFileSync(inputFile, "utf8");
-    console.log(
-      JSON.stringify(execute(process.argv[2], JSON.parse(content)), null, 2)
-    );
+    else content = fs6.readFileSync(inputFile, "utf8");
+    const action = process.argv[2], input = JSON.parse(content);
+    const result = await execute(action, input);
+    try {
+      const { usage } = await import(pathToFileURL(path6.join(plugin, "scripts/usage-analytics.mjs")).href);
+      if (action === "update" && input.status === "completed") {
+        const snapshot = execute("snapshot", { root: input.root, runId: input.runId });
+        if (snapshot.runs[0]?.checks.some((c) => ["passed", "failed"].includes(c.status))) await createFunnel({ usage: usage(), edition: "codex" }).record("completed", input.runId);
+      }
+      if (action === "start") await usage().record("Assessment Started", "", "start:" + result.result.runId);
+      else if (action === "update" && ["completed", "partial", "blocked", "canceled"].includes(input.status)) await usage().record("Assessment " + input.status[0].toUpperCase() + input.status.slice(1), "", "terminal:" + input.runId);
+      else if (action === "report") await usage().record("Report Viewed");
+      else if (action === "settings") await usage().record("Settings Viewed");
+    } catch {
+    }
+    console.log(JSON.stringify(result, null, 2));
   } catch (e) {
     console.error(JSON.stringify({ error: e.message }));
     process.exitCode = 1;

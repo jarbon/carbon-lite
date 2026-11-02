@@ -1,15 +1,32 @@
 {
   "schema": "carbon.demo-fixtures/v1",
   "version": 1,
-  "defaultFixture": "web-static",
+  "defaultFixture": "testbucks",
   "fixtures": [
+    {
+      "id": "testbucks",
+      "label": "TestBucks \u2014 complete coffee-shop app",
+      "description": "Offline TestBucks shop with dietary filters, favorites, cart editing, promo/rewards pricing, payment recovery, pickup lifecycle, repeat orders, persistence, and eight practice journeys.",
+      "kind": "web-app",
+      "complexity": "intermediate",
+      "default": true,
+      "start": {
+        "command": "node server.mjs",
+        "url": "",
+        "urlSource": "Read the url field printed by the server after startup; the OS assigns a free loopback port."
+      },
+      "testPaths": [
+        "tests"
+      ],
+      "testSummary": "Optional dependency-free node:test suite plus manual journeys for pricing, rewards, recovery, lifecycle, persistence and accessibility."
+    },
     {
       "id": "web-static",
       "label": "Brewtown Coffee \u2014 simple website",
       "description": "A compact multi-page static site with menu loading, search, client-side form validation, and local storage.",
       "kind": "website",
       "complexity": "starter",
-      "default": true,
+      "default": false,
       "start": {
         "command": "python3 -m http.server 8080",
         "url": "http://127.0.0.1:8080/"
@@ -32,7 +49,8 @@
       "testPaths": [
         "tests"
       ],
-      "testSummary": "A manual task-lifecycle charter and an optional Playwright flow test."
+      "testSummary": "A manual task-lifecycle charter and an optional Playwright flow test.",
+      "default": false
     },
     {
       "id": "api-server",
@@ -47,7 +65,8 @@
       "testPaths": [
         "test"
       ],
-      "testSummary": "Existing node:test unit and real-HTTP integration tests plus a manual API boundary charter."
+      "testSummary": "Existing node:test unit and real-HTTP integration tests plus a manual API boundary charter.",
+      "default": false
     },
     {
       "id": "eval-runner",
@@ -62,7 +81,8 @@
       "testPaths": [
         "tests"
       ],
-      "testSummary": "Existing unittest coverage plus a manual evaluator and reporting-review charter."
+      "testSummary": "Existing unittest coverage plus a manual evaluator and reporting-review charter.",
+      "default": false
     }
   ],
   "testProfiles": [

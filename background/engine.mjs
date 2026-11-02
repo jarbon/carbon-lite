@@ -5,9 +5,11 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {spawn, execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {reviewChanges, summarizeCategories} from './quick-checks.mjs';
+import {renderReport} from './report.mjs';
 
 const self = fileURLToPath(import.meta.url);
-export const defaults = Object.freeze({enabled:false, idleSeconds:120, runSeconds:180,
+export const defaults = Object.freeze({enabled:true, idleSeconds:120, runSeconds:180,
   dailySeconds:600, dailyRuns:3, cooldownSeconds:1800, aiReview:false, reminders:true, tests:[]});
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
 const day = () => new Date().toISOString().slice(0,10);
@@ -95,7 +97,8 @@ export function createSupervisor(options={}) {
   function snapshot(root) {
     try {
       // Only tracked changes and non-ignored new source. No repository scripts run.
-      const names=new Set([...git(root,['diff','HEAD','--name-only','-z','--no-ext-diff','--no-textconv']).split('\0'),...git(root,['ls-files','--others','--exclude-standard','-z']).split('\0')]);
+      const untracked=new Set(git(root,['ls-files','--others','--exclude-standard','-z']).split('\0'));
+      const names=new Set([...git(root,['diff','HEAD','--name-only','-z','--no-ext-diff','--no-textconv']).split('\0'),...untracked]);
       const files=[];let bytes=0,omitted=0;
       for(const name of [...names].sort()) {
         if(!name||!/[.](?:m?js|cjs|jsx|tsx?|json|css|html|py|go|rs|java|rb)$/i.test(name)||/(^|\/)(?:\.|node_modules|vendor|dist|build|output|coverage)|(?:lock|secret|credential|token|password|auth|private|customer|fixture)/i.test(name)){if(name)omitted++;continue;}
@@ -104,7 +107,21 @@ export function createSupervisor(options={}) {
         if(!fs.existsSync(f)){files.push({name,deleted:true});continue;}
         if(fs.realpathSync(f)!==f||!fs.statSync(f).isFile()||fs.statSync(f).size>64000||files.length>=12){omitted++;continue;}
         const text=fs.readFileSync(f,'utf8');bytes+=Buffer.byteLength(text);if(bytes>128000){omitted++;continue;}
-        files.push({name,text,digest:hash(text)});
+        let changedLines;
+        if(untracked.has(name))changedLines=text.split('\n').map((_,i)=>i+1);
+        else {
+          changedLines=[];
+          const diff=git(root,['diff','HEAD','--unified=0','--no-ext-diff','--no-textconv','--',name]);
+          let line=0,inHunk=false;
+          for(const part of diff.split('\n')) {
+            const hunk=part.match(/^@@ .* \+(\d+)(?:,\d+)? @@/);
+            if(hunk){line=Number(hunk[1]);inHunk=true;continue;}
+            if(!inHunk)continue;
+            if(part.startsWith('+'))changedLines.push(line++);
+            else if(part.startsWith(' '))line++;
+          }
+        }
+        files.push({name,text,changedLines,digest:hash(text)});
       }
       return {files,omitted,fingerprint:hash(JSON.stringify(files.map(f=>[f.name,f.digest||'deleted'])))};
     }catch{return {files:[],omitted:0,fingerprint:null};}
@@ -138,6 +155,9 @@ export function createSupervisor(options={}) {
       if(grant.skipped)return grant;
       const deadline=now()+grant.seconds*1000;
       const checks=[],id=crypto.randomUUID(),started=now();let wasCancelled=false,ai=null;
+      const report=path.join(initial.dir,'latest.html');
+      const base={id,kind:'background',startedAt:new Date(started).toISOString(),durationSeconds:0,status:'running',checks:[],passed:0,failed:0,deferred:0,findings:[],categories:[],omittedFiles:snap.omitted,confidence:'Checks in progress; no result yet.',next:'Jay is checking changed source locally.'};
+      fs.writeFileSync(report,renderReport(base),{mode:0o600});
       const shouldStop=()=>cancelled()||now()>=deadline;
       async function command(exe,args,input,limit=15000,cwd=initial.root,env={}) {
         if(shouldStop())return {status:'deferred',reason:'Stopped: user active, paused, or time budget reached'};
@@ -182,17 +202,19 @@ export function createSupervisor(options={}) {
           try {const parsed=JSON.parse(ai.output);ai.output=typeof parsed.result==='string'?parsed.result:'Provider returned no review text';if(parsed.is_error)ai.status='blocked';}catch{ai.output='AI review unavailable; local evidence is retained.';ai.status='blocked';}
         }
       }
-      const result={id,kind:'background',startedAt:new Date(started).toISOString(),durationSeconds:Math.round((now()-started)/1000),status:wasCancelled||shouldStop()||checks.some(c=>['deferred','blocked'].includes(c.status))||(ai&&ai.status!=='passed')?'partial':'completed',checks,aiReview:ai,
+      const review=shouldStop()?{findings:[],examined:[]}:reviewChanges(snap.files);
+      const stale=snapshot(initial.root).fingerprint!==snap.fingerprint;
+      const result={id,kind:'background',startedAt:new Date(started).toISOString(),durationSeconds:Math.round((now()-started)/1000),status:stale?'stale':wasCancelled||shouldStop()||checks.some(c=>['deferred','blocked'].includes(c.status))||(ai&&ai.status!=='passed')?'partial':'completed',checks,aiReview:ai,
+        findings:review.findings,categories:summarizeCategories(checks,review),stale,sourceFingerprint:snap.fingerprint,
         passed:checks.filter(c=>c.status==='passed').length,failed:checks.filter(c=>c.status==='failed').length,deferred:checks.filter(c=>c.status==='deferred'||c.status==='blocked').length,
         omittedFiles:snap.omitted,confidence:'Limited to recorded checks. No browser, API, security or release-readiness claim.',next:'Review failures and run a focused CARBON behavior check before shipping.'};
-      const report=path.join(initial.dir,'latest.html');
       atomic(path.join(initial.dir,'latest.json'),result);
       fs.writeFileSync(report,render(result),{mode:0o600});
       await locked(()=>{const s=status(root);atomic(path.join(s.dir,'state.json'),{...s.state,lastReport:report,lastResultId:id,pendingSummary:true});const m=read(path.join(s.dir,'metrics.json'),{assessments:0,completed:0,reviewed:0});m.assessments++;if(result.status==='completed')m.completed++;m.repeatUse=m.assessments>1;atomic(path.join(s.dir,'metrics.json'),m);});
       return {...result,report};
     }finally{fs.closeSync(fd);fs.unlinkSync(workerLock);}
   }
-  function render(r) {return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>Jay · Background checks</title><style>body{background:#101715;color:#edf4f0;font:16px/1.6 system-ui;margin:40px auto;padding:0 24px;max-width:850px}header{color:#aac9bb}h1{font-size:32px;line-height:1.2}.stats{display:flex;gap:12px;flex-wrap:wrap}.stats span,article{background:#1a2420;border:1px solid #344a40;border-radius:14px;padding:16px}article{margin:12px 0}small{color:#b7c6bd}.failed{border-color:#976b6d}.passed{border-color:#638c76}pre{white-space:pre-wrap;overflow-wrap:anywhere}summary{cursor:pointer}a{color:#c2e0d0}</style><header>CARBON · JAY BACKGROUND CHECKS</header><h1>A quick check of what changed.</h1><p>${esc(r.status)} · ${r.durationSeconds}s · ${esc(r.startedAt)}</p><div class="stats"><span>${r.passed} passed</span><span>${r.failed} failed</span><span>${r.deferred} need a closer look</span></div>${r.checks.map(c=>`<article class="${esc(c.status)}"><strong>${esc(c.name)}</strong><br><small>${esc(c.kind)} · ${esc(c.status)}</small>${c.reason?`<p>${esc(c.reason)}</p>`:''}${c.output?`<details><summary>Evidence</summary><pre>${esc(c.output)}</pre></details>`:''}</article>`).join('')}${r.aiReview?`<article><h2>Jay’s source review</h2><small>AI-assisted inspection · ${esc(r.aiReview.status)} · not executed behavior tests</small><pre>${esc(r.aiReview.output)}</pre></article>`:''}<p>${esc(r.confidence)} ${r.omittedFiles} files outside this small check.</p><p>${esc(r.next)}</p><footer>Ask Jay: “Review my background results”, “Pause background checks”, or “Disable background checks everywhere”. Results and outcome counts stay on this machine. No token counter.</footer></html>`;}
+  const render=renderReport;
   async function outcome(root,event,id) {
     if(!['assessment-completed','finding-reviewed'].includes(event)||typeof id!=='string'||id.length>200)throw Error('Expected a local outcome and stable run/finding ID');
     return locked(()=>{const s=status(root),m=read(path.join(s.dir,'outcomes.json'),{completedAssessments:0,reviewedFindings:0,days:[],seen:[]});const key=hash(event+id);if(!m.seen.includes(key)){m.seen.push(key);m.seen=m.seen.slice(-1000);if(event==='assessment-completed')m.completedAssessments++;else m.reviewedFindings++;if(!m.days.includes(day()))m.days.push(day());m.returnDays=m.days.length;atomic(path.join(s.dir,'outcomes.json'),m);}return m;});
@@ -244,11 +266,16 @@ export function createSupervisor(options={}) {
     await activity(root,event,input.session_id);
     if(event==='SessionStart'||event==='UserPromptSubmit') {
       let context=threadNote;
+      const { requestSettings } = await import('./onboarding.mjs');
+      const onboarding = input.session_id ? await requestSettings(root, { home, edition: options.edition, sessionId: input.session_id }) : { shouldRequest: false };
+      if (onboarding.shouldRequest) context += ` First-use CARBON setup is not completed for this edition. Before the first CARBON assessment, request /carbon-settings for ${JSON.stringify(root)} and open its returned rendered browser target beside chat, never HTML source. Introduce Jay, the AI test manager, and show the existing automatic quick-check versus manual testing choice. Preserve project disables, global pause and CARBON_BACKGROUND=off. Do not select or save a mode on the user's behalf; only the user's explicit Save completes onboarding. If the host cannot open settings now, offer /carbon-settings at first CARBON use. This hook requests a page; it does not prove installation or page opening. `;
       if(s.state.pendingSummary) {
-        const r=read(path.join(s.dir,'latest.json'),null);if(r)context+=` Jay background checks: ${r.passed} passed, ${r.failed} failed, ${r.deferred} deferred. ${r.status}. Evidence: ${s.state.lastReport}. Briefly mention relevant new failures; do not interrupt unrelated work or auto-fix. `;
+        const r=read(path.join(s.dir,'latest.json'),null);if(r)context+=` Jay background checks: ${r.passed} passed, ${r.failed} failed, ${r.deferred} deferred. ${r.status}. Possible issues by category: ${JSON.stringify(r.categories||[])}. Evidence: ${s.state.lastReport}. Show Jay's icon using ${path.join(path.dirname(self),'jay-gray.webp')} if the host renders local images; otherwise use the name Jay. Briefly mention relevant new failures or possible issues; do not interrupt unrelated work or auto-fix. Use monochrome bars and counts, never a quality percentage. `;
         await locked(()=>{const current=status(root);atomic(path.join(current.dir,'state.json'),{...current.state,pendingSummary:false});});
       }
-      if(event==='SessionStart')context+='Use CARBON when the user asks to test or verify a change. For a new target, offer a quick, useful assessment first. Background checks require a per-project choice: ask once during the first CARBON run, not now. Use carbon-background for setup, status, pause and review. Never infer consent from installing the plugin.';
+      if(event==='SessionStart')context+=s.config.enabled&&!s.global.disabled&&process.env.CARBON_BACKGROUND!=='off'
+        ? `Jay quick checks are on. After implementing a meaningful code change, give it a bounded quick review before finishing: inspect the diff, nearby callers and tests, then run the narrowest already-authorized local check for that change. Aim for two minutes, at most five checks; do not start a full sweep. No auto-fixes, dependency installs, live services, production credentials or new model processes. Ask before tests with unknown side effects. Use ${path.join(path.dirname(self),'first-use.md')} for the workflow. Report what actually ran, possible issues by category, and deferred tests. Show Jay's icon if supported, never claim native avatar control. Idle local checks also run after roughly two quiet minutes, subject to budgets. Mention this briefly once and offer Pause background checks. Use carbon-background for status, pause and review.`
+        : 'Jay automatic quick checks are paused for this project or globally. Preserve that choice; only test when requested. Use carbon-background to review or explicitly re-enable.';
       return context?{hookSpecificOutput:{hookEventName:event,additionalContext:context}}:{};
     }
     return {};

@@ -1,6 +1,6 @@
 {
   "manifest_version": "0.3", "name": "carbon-lite",
-  "display_name": "Testers.ai CARBON Test Harness Lite", "version": "0.1.0",
+  "display_name": "Testers.ai CARBON Test Harness Lite", "version": "0.1.2",
   "description": "Local test planning, bug evidence, accessibility workflows and visual quality reports for AI agents.",
   "author": { "name": "testers.ai", "url": "https://testers.ai/carbon/" },
   "repository": { "type": "git", "url": "https://github.com/jarbon/carbon-lite" },

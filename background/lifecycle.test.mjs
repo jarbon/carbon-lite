@@ -12,7 +12,8 @@ test('trusted Stop -> real idle delay -> detached worker -> saved report -> next
   const git=args=>execFileSync('git',args,{cwd:root,stdio:'pipe'});
   git(['init']);git(['config','user.email','test@example.invalid']);git(['config','user.name','Test']);
   fs.writeFileSync(path.join(root,'app.js'),'let x=1');git(['add','.']);git(['commit','-m','synthetic baseline']);
-  const s=createSupervisor({home:path.join(tmp,'state')});await s.configure(root,{enabled:true,idleSeconds:60},true);
+  const s=createSupervisor({home:path.join(tmp,'state')});await s.configure(root,{idleSeconds:60});
+  assert.equal(s.status(root).config.enabled,true,'default enabled without an opt-in mutation');
   fs.writeFileSync(path.join(root,'app.js'),'let broken=;');const start=Date.now();
   await s.hook({cwd:root,session_id:'e2e',hook_event_name:'Stop'},'codex');
   while(!s.status(root).state.lastReport&&Date.now()-start<70000)await new Promise(r=>setTimeout(r,500));

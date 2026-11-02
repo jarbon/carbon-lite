@@ -1,4 +1,4 @@
-# CARBON Lite support
+# Carbon Core support
 
 Built by Testers.ai. Contact **jason@testers.ai** for installation, privacy, licensing,
 or security questions. Public non-sensitive bugs can be filed in this repository's
@@ -9,6 +9,6 @@ example. The optional helper requires Node.js 22 or later. Archive users do not 
 npm install. Testing uses capabilities the host already provides; the plugin does
 not install a browser or grant permissions.
 
-CARBON Lite exports ordinary HTML reports, not native MCP panels. Open the returned
+Carbon Core exports ordinary HTML reports, not native MCP panels. Open the returned
 file, reload it after updates, or import its sibling workspace.json. Opening a report
 does not run tests. An empty report is not evidence that the application passed.

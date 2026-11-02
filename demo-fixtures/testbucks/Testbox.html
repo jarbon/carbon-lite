@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TestBucks — Practice coffee shop</title><link rel="stylesheet" href="shop.css"></head>
+<body data-session="testbucks-practice-v1">
+<div class="notice">Training website · Synthetic data only · No real payment or order is sent</div>
+<header><a class="brand" href="#home"><span class="seal" aria-hidden="true">✓</span>TestBucks</a><nav aria-label="Main navigation"><a href="#home">Home</a><a href="#menu">Menu</a><a href="#cart">Cart <span id="count">0</span></a><a href="#orders">Orders</a><a href="#rewards">Rewards</a><a href="#practice">Practice</a></nav></header>
+<p id="announcement" role="status" aria-live="polite"></p><main id="main"></main>
+<footer>TestBucks Quality Brew · Fictional course project, not affiliated with Starbucks.<br>Data stays in this browser. Do not enter real personal or company information.</footer>
+<dialog id="custom"><form id="custom-form"><h2 id="drink-name">Customize your drink</h2><p id="diet-note"></p>
+<div class="field"><label for="size">Size</label><select id="size"><option value="small">Small (−$0.50)</option><option value="medium" selected>Medium</option><option value="large">Large (+$0.75)</option></select></div>
+<div class="field"><label for="milk">Milk</label><select id="milk"><option value="regular">Regular</option><option value="oat">Oat (+$0.75)</option><option value="almond">Almond (+$0.75)</option></select></div>
+<label class="check"><input type="checkbox" id="shot">Extra espresso shot (+$0.80)</label><div class="field"><label for="quantity">Quantity</label><input id="quantity" type="number" min="1" max="10" value="1" required></div><p class="price" id="custom-price"></p>
+<div class="actions"><button type="submit">Add to cart</button><button type="button" class="secondary" id="cancel">Cancel</button></div></form></dialog>
+<dialog id="confirmation" aria-labelledby="confirmation-title"><h2 id="confirmation-title">Confirm practice action</h2><p id="confirmation-message"></p><div class="actions"><button type="button" id="confirm-yes">Confirm</button><button type="button" class="secondary" id="confirm-no" autofocus>Keep current data</button></div></dialog>
+<script type="module" src="app.mjs"></script></body></html>

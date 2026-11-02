@@ -1,8 +1,13 @@
 # Jay background checks
 
-CARBON now helps the agent select testing at the right time and offers a quick first
-assessment. Optional background checking starts only after a clear per-project choice.
-An update never silently enables it. Ordinary testing still works without the hooks.
+Jay gives code changes a quick second look by default when trusted host hooks are
+available. Existing saved disables and global pauses stay disabled. No hook trust
+is bypassed. Ordinary testing still works without the hooks.
+
+At the end of meaningful coding work, the host agent gets instructions to inspect
+the diff, callers and tests and run small already-authorized local checks (about
+two minutes, up to five checks). This is a host-agent workflow, not a guaranteed
+timer. The separate idle worker below enforces its own execution budget.
 
 ## Behavior and boundaries
 
@@ -10,8 +15,11 @@ An update never silently enables it. Ordinary testing still works without the ho
   permission request, interruption or session end cancels queued/running checks.
 - Inspect changed, non-ignored source in a Git project. No changes means no run.
   No Git baseline means no automatic run; offer an explicit assessment instead.
-- Check JSON and JavaScript syntax without executing the application. Other source
-  types become deferred behavior checks. Optional exact local test commands require
+- Check JSON and JavaScript syntax without executing the application. Scan added/
+  edited lines for dynamic evaluation, raw HTML insertion, disabled TLS checks,
+  empty catches, missing image alt attributes and skipped/exclusive tests. Pattern
+  matches are possible issues, not confirmed bugs. Other source types and actual
+  behavior checks remain explicitly deferred. Exact local test commands require
   separate approval. These are not an exhaustive QA run or a release sign-off.
 - Default 180 seconds; configurable to a hard maximum of 600. Shared single worker,
   30-minute per-project cooldown, three runs/day, ten reserved minutes/day. Reservations
@@ -19,7 +27,7 @@ An update never silently enables it. Ordinary testing still works without the ho
 - No unchanged-code repeats. New edits cancel the current work through host activity
   events. Editing in an unrelated external editor is not a guaranteed idle signal.
 - No browser control, network testing, load/stress activity, automatic fixes, dependency
-  installation or evidence uploads. All local execution stays within opted-in projects.
+  installation or evidence uploads. All local execution stays within the current project.
 - Local test commands can have side effects: approve only commands you trust to stay
   in disposable/local environments. CARBON's process timeout is not a security sandbox.
   Automatic custom test commands and optional Claude review are macOS/Linux only;
@@ -64,8 +72,8 @@ node <plugin-root>/background/engine.mjs review <project>
 
 Optional tests use an absolute executable and argument array, never an implicit shell:
 `{"tests":[{"label":"Approved isolated unit tests","command":"/absolute/path/to/node","args":["--test","tests/unit.test.mjs"],"timeoutSeconds":60}]}`.
-Only pass `--approved` after the person approves the specific behavior. No repo file
-can opt a new user into background execution. Settings, reports and deduplicated
+Only pass `--approved` after the person approves the specific behavior. Repo files
+cannot change background preferences or authorize executable tests. Settings, reports and deduplicated
 outcome counts are in `~/.config/carbon/background/v1/<project-hash>/`, not the repo.
 `CARBON_BACKGROUND=off` is an environment kill switch. Hook trust is controlled by the host.
 
@@ -81,6 +89,14 @@ local hook support: manual assessment only. No local or remote MCP was added to 
 Background results do not wake an idle model. The compact result is made available
 at the next user turn/session; the report is immediately readable as local HTML.
 This avoids spending more allowance merely to announce completion.
+
+The portable dark report embeds Jay's existing icon and uses silver/grayscale bars
+under **Possible issues by category**. Bars show counts, not probabilities or a
+release score. Syntax/test failures are separate from speculative pattern matches;
+unmeasured categories say Not checked. Reports include file/line, next check and
+execution evidence. Source changes during checking mark the result stale. The chat
+uses Jay's image only where the host supports local images; plugins cannot replace
+the host's native assistant avatar. This workflow has no external QA service dependency.
 
 ## Outcome measurement and privacy
 

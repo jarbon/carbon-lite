@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-const bundle = path.resolve('output/mcp/0.1.0/carbon-lite');
+const bundle = path.resolve(`output/mcp/${JSON.parse(fs.readFileSync('mcp/manifest.json')).version}/carbon-lite`);
 async function connect(root) {
   const client = new Client({ name: 'carbon-release-test', version: '1.0.0' });
   const transport = new StdioClientTransport({ command: process.execPath, args: [path.join(bundle, 'mcp/server.mjs'), ...(root ? [root] : [])], stderr: 'pipe' });
@@ -20,14 +20,23 @@ test('bundled MCP: discovery, every prompt, evidence lifecycle and isolation', a
   const tools = (await client.listTools()).tools;
   assert.equal(tools.length, 10);
   const prompts = (await client.listPrompts()).prompts;
-  assert.equal(prompts.length, 11);
-  for (const p of prompts) assert.match((await client.getPrompt({ name: p.name, arguments: { target: 'synthetic fixture' } })).messages[0].content.text, /MCP host instructions/);
+  assert.equal(prompts.length, 13);
+  for (const p of prompts) {
+    const text = (await client.getPrompt({ name: p.name, arguments: { target: 'synthetic fixture' } })).messages[0].content.text;
+    if (p.name === 'carbon-pro') {
+      assert.match(text, /https:\/\/testers.ai\/carbon\/#pro/);
+      assert.doesNotMatch(text, /MCP host instructions|synthetic fixture/);
+    } else if (p.name === 'full') assert.match(text, /approval|budget/);
+    else assert.match(text, /MCP host instructions/);
+  }
   assert.match((await client.callTool({ name: 'carbon_workflow', arguments: { command: 'carbon' } })).content[0].text, /evidence/);
   assert.ok((await client.callTool({ name: 'carbon_knowledge', arguments: {} })).content[0].text.length > 100);
   const call = (name, args = {}) => client.callTool({ name, arguments: args });
   const started = data(await call('carbon_start', { title: 'Synthetic transport test', target: 'local fixture' }));
   const runId = started.result.runId;
   assert.ok(fs.existsSync(started.html));
+  assert.deepEqual(started.openTarget, { type: 'browser', url: started.browserUrl });
+  assert.equal(started.placement, 'right');
   const failedEvidence = await call('carbon_update', { runId, revision: 0, checks: [{ id: 'a', title: 'Missing evidence', domain: 'Test', type: 'positive', status: 'passed' }] });
   assert.equal(failedEvidence.isError, true);
   data(await call('carbon_update', { runId, revision: 0, pages: [{ id: 'page', title: 'Synthetic page', url: 'about:blank' }], checks: [{ id: 'a', title: 'Synthetic observation', domain: 'Test', type: 'positive', status: 'passed', actual: 'Test fixture assertion', evidence: ['Synthetic protocol test, not product testing'] }] }));
@@ -46,6 +55,12 @@ test('bundled MCP: discovery, every prompt, evidence lifecycle and isolation', a
   data(await call('carbon_demo', { action: 'list' }));
   data(await call('carbon_update', { runId, revision: snap.runs[0].revision, status: 'completed', confidence: { score: 50, scope: 'Synthetic fixture only', rationale: 'Transport test', limitations: ['No actual product tested'] } }));
   const exported = data(await call('carbon_report'));
+  assert.deepEqual(exported.openTarget, { type: 'browser', url: exported.browserUrl });
+  const viewer = new URL(exported.browserUrl);
+  assert.equal((await fetch(viewer.origin + '/report')).status, 403);
+  const rendered = await fetch(viewer.origin + '/report', { headers: { 'X-Carbon-Report-Token': viewer.hash.slice(1) } });
+  assert.match(rendered.headers.get('content-type'), /text\/html/);
+  assert.match(await rendered.text(), /Synthetic transport test/);
   assert.match(fs.readFileSync(exported.html, 'utf8'), /Synthetic transport test/);
   assert.equal((await call('carbon_update', { runId, revision: snap.runs[0].revision + 1, summary: 'rewrite closed' })).isError, true);
 });

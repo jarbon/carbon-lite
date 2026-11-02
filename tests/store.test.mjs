@@ -11,6 +11,7 @@ function setup(t) {
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
   const project = path.join(dir, "app");
   fs.mkdirSync(project);
+  fs.writeFileSync(path.join(project, "fixture.txt"), "Explicit local test fixture");
   return { store: new Store(path.join(dir, "state")), project, dir };
 }
 const check = {
@@ -214,4 +215,28 @@ test("permissions are private", (t) => {
   const { store } = setup(t);
   store.settings({ maxChecks: 30 });
   assert.equal(fs.statSync(store.file).mode & 0o777, 0o600);
+});
+
+test("risk addenda preserve closed evidence and enforce revisions",t=>{
+ const {store,project}=setup(t);
+ let run=store.start({root:project,title:"Recorded run",target:"App"});
+ run=store.update({runId:run.id,revision:run.revision,status:"completed",checks:[check]});
+ const before=structuredClone(run);
+ const input={runId:run.id,revision:run.revision,summary:"Evidence-based follow-up",limitations:["Limited scope"],risks:[{title:"Persistence",priority:"high",consequence:"Lost order",evidence:["capture-1.png"],remaining:"Cross-device behavior",next:"Exercise another browser"}]};
+ const after=store.addRiskAnalysis(input);
+ assert.deepEqual(after.checks,before.checks);
+ assert.deepEqual(after.history,before.history);
+ assert.equal(after.status,"completed");
+ assert.equal(after.riskAnalyses.length,1);
+ assert.ok(after.riskAnalyses[0].at);
+ assert.throws(()=>store.addRiskAnalysis(input),/Run changed/);
+ assert.throws(()=>store.addRiskAnalysis({...input,revision:after.revision,checks:[]}));
+ assert.throws(()=>store.update({runId:after.id,revision:after.revision,current:"Rewrite"}),/closed/);
+});
+test('persona review validates ratings and preserves closed observations',t=>{
+ const {store,project}=setup(t);let r=store.start({root:project,title:'Persona review',target:project});
+ r=store.update({runId:r.id,revision:r.revision,personas:[{id:'p',role:'Shopper',intent:'Order',journey:'Cart to order',observation:'Order persisted',evidence:['step.png']}],status:'completed'});
+ const original=JSON.stringify(r.personas);const args={runId:r.id,revision:r.revision,personaId:'p',overallRating:4,rationale:'Scoped evidence review',feedback:[{category:'Persistence',rating:5,observation:'Reload retained order',evidence:['step.png']}]};
+ assert.throws(()=>store.addPersonaFeedback({...args,overallRating:6}));assert.throws(()=>store.addPersonaFeedback({...args,personaId:'missing'}));
+ const result=store.addPersonaFeedback(args);assert.equal(JSON.stringify(result.personas),original);assert.equal(result.status,'completed');assert.equal(result.personaReviews.length,1);assert.throws(()=>store.addPersonaFeedback(args),/changed/);
 });

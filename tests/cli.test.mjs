@@ -37,7 +37,7 @@ test("compiled entrypoint executes through a symbolic directory path", t => {
   const root=setup(t);
   fs.symlinkSync(plugin,path.join(root,'package-link'),'dir');
   const result=JSON.parse(execFileSync(process.execPath,[path.join(root,'package-link/scripts/carbon.mjs'),'demo','-'],{input:JSON.stringify({root,action:'list'}),encoding:'utf8'}));
-  assert.equal(result.fixtures.length,4);
+  assert.equal(result.fixtures.length,5);
 });
 test("CLI settings writes require the current snapshot revision", t => {
   const root=setup(t);
@@ -96,7 +96,7 @@ test("compiled helper works from an unrelated directory, preserving evidence acr
 });
 test("feedback roundtrip is explicit, atomic and revision protected", (t) => {
   const root = setup(t),
-    r = call("start", { root, title: "Feedback" }).result;
+    r = call("start", { root, title: "Feedback", target: "Supplied feedback fixture" }).result;
   call("update", { root, runId: r.runId, revision: 0, findings: [finding] });
   const snapshot = call("snapshot", { root });
   const feedback = {
@@ -127,10 +127,11 @@ test("feedback roundtrip is explicit, atomic and revision protected", (t) => {
   );
   assert.equal(call("snapshot", { root }).settings.theme, "light");
 });
-test("all four demo variants are copied, optional tests omitted, never overwrite", (t) => {
+test("all five demo variants are copied, optional tests omitted, never overwrite", (t) => {
   const root = setup(t),
     manifest = call("demo", { root, action: "list" });
-  assert.equal(manifest.fixtures.length, 4);
+  assert.equal(manifest.fixtures.length, 5);
+  assert.equal(manifest.defaultFixture, 'testbucks');
   for (const fixture of manifest.fixtures)
     for (const profile of manifest.testProfiles) {
       const result = call("demo", {
@@ -168,6 +169,18 @@ test("no project-wide ambient writes or listening process; malformed requests fa
   assert(!fs.existsSync(path.join(root, ".carbon")));
   assert.throws(() => call("start", { root: "relative", title: "bad" }));
 });
+test("explicit compiled view returns a rendered browser target and exits", async t => {
+  const root = setup(t);
+  call('start', { root, title: 'Rendered presentation fixture', target: 'Supplied presentation fixture' });
+  const view = call('view', { root });
+  assert.deepEqual(view.openTarget, { type: 'browser', url: view.browserUrl });
+  assert.equal(view.placement, 'right');
+  assert.equal(view.expiresInSeconds, 1800);
+  const url = new URL(view.browserUrl);
+  const response = await fetch(url.origin + '/report', { headers: { 'X-Carbon-Report-Token': url.hash.slice(1) } });
+  assert.match(response.headers.get('content-type'), /text\/html/);
+  assert.match(await response.text(), /Rendered presentation fixture/);
+});
 test("manifest includes Jay and bounded background entrypoints without MCP/apps", () => {
   const m = JSON.parse(
     fs.readFileSync(path.join(plugin, ".codex-plugin/plugin.json")),
@@ -178,8 +191,10 @@ test("manifest includes Jay and bounded background entrypoints without MCP/apps"
   assert(!m.mcpServers && !m.apps);
   assert.equal(m.hooks, './hooks/codex.json');
   const dirs = fs.readdirSync(path.join(plugin, "skills"));
-  assert.deepEqual([...dirs].sort(), ['carbon','carbon-background','carbon-accessibility','carbon-demo','carbon-help','carbon-issues','carbon-map','carbon-settings','carbon-studio','carbon-test','j','jay'].sort());
-  assert.equal(dirs.length, 12);
+  assert.deepEqual([...dirs].sort(), ['carbon','carbon-background','carbon-accessibility','carbon-demo','carbon-help','carbon-issues','carbon-map','carbon-pro','carbon-settings','carbon-studio','carbon-test','full','j','jay'].sort());
+  assert.equal(dirs.length, 14);
+  assert(!fs.existsSync(path.join(plugin,'runtime/carbon/scripts/carbon_proof.py')));
+  assert(!JSON.stringify(m).includes('/proof'));
   for (const d of dirs) {
     const s = fs.readFileSync(
       path.join(plugin, "skills", d, "SKILL.md"),

@@ -1,7 +1,7 @@
 # Resolve what CARBON should test
 
 Apply this before project onboarding, creating a run, generating a demo, or
-scanning files for a bare `/carbon` (including host-prefixed forms).
+scanning files for any investigation command (including host-prefixed forms).
 
 - Prefer a URL, folder, repository, API, app, feature, document, or requirements
   explicitly supplied in the current request. Otherwise use a clearly selected
@@ -33,3 +33,13 @@ scanning files for a bare `/carbon` (including host-prefixed forms).
   substitute a demo. Continue other safe in-scope work and explain the limitation.
   Keep fixes, destructive tests, load, payments, and external writes behind their
   existing approval gates. Demo creation happens only when explicitly requested.
+
+## Commands that do not require a new investigation
+Help, settings, Pro navigation and Jay conversation may answer or open their own
+controls without a product target; they must not start tests. Demo creation is
+explicit opt-in. Report/map/continue commands require an explicitly selected
+prior assessment; if none exists, ask for a target or an assessment to open.
+A generated report or `.carbon` directory is not evidence that a product exists.
+The host must distinguish user-supplied descriptions from its own guesses.
+Runtime guards reject empty/state-only folders with absent or placeholder targets;
+they cannot establish that arbitrary descriptive text came from the user.

@@ -1,4 +1,4 @@
-# CARBON Lite terms
+# Carbon Core terms
 
 Effective October 3, 2026. Provided by Testers.ai. Contact: jason@testers.ai.
 
@@ -16,5 +16,5 @@ assurance that all defects were found. The software is provided as-is, subject
 to the warranty and liability provisions of LICENSE and applicable law.
 
 Your coding-agent subscription, model usage, test-target charges, and connected
-services are separate. CARBON Lite does not sell or provision access to them.
+services are separate. Carbon Core does not sell or provision access to them.
 See [PRIVACY.md](PRIVACY.md) for local evidence and third-party processing.

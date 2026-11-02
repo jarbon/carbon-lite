@@ -3,11 +3,17 @@ import path from 'node:path';
 import { build } from 'esbuild';
 import { execFileSync } from 'node:child_process';
 import crypto from 'node:crypto';
-const stage = path.resolve('output/mcp/0.1.0/carbon-lite');
+const version = JSON.parse(fs.readFileSync('mcp/manifest.json')).version;
+const stage = path.resolve(`output/mcp/${version}/carbon-lite`);
 fs.mkdirSync(path.join(stage, 'mcp'), { recursive: true });
-for (const item of ['dist', 'references', 'skills', 'demo-fixtures', 'assets', 'LICENSE', 'NOTICE.md', 'PRIVACY.md', 'SUPPORT.md', 'TERMS.md']) fs.cpSync(item, path.join(stage, item), { recursive: true });
+for (const item of ['runtime', 'ui', 'dist', 'references', 'skills', 'demo-fixtures', 'assets', 'LICENSE', 'NOTICE.md', 'PRIVACY.md', 'SUPPORT.md', 'TERMS.md']) fs.cpSync(item, path.join(stage, item), { recursive: true });
 fs.mkdirSync(path.join(stage, 'scripts'), { recursive: true });
 fs.copyFileSync('scripts/carbon.mjs', path.join(stage, 'scripts/carbon.mjs'));
+fs.copyFileSync('scripts/report-viewer.mjs', path.join(stage, 'scripts/report-viewer.mjs'));
+fs.copyFileSync('scripts/settings-viewer.mjs', path.join(stage, 'scripts/settings-viewer.mjs'));
+fs.cpSync('background',path.join(stage,'background'),{recursive:true});
+for (const file of ['usage-analytics.mjs','fathom-analytics.mjs']) fs.copyFileSync('scripts/'+file,path.join(stage,'scripts',file));
+fs.writeFileSync(path.join(stage,'scripts/analytics-product.json'),JSON.stringify({edition:'mcp-lite',version,defaultEnabled:false},null,2)+'\n');
 fs.copyFileSync('mcp/manifest.json', path.join(stage, 'manifest.json'));
 fs.copyFileSync('mcp/README.md', path.join(stage, 'README.md'));
 await build({ entryPoints: ['mcp/server.mjs'], outfile: path.join(stage, 'mcp/server.mjs'), bundle: true, platform: 'node', format: 'esm', target: 'node22', minify: false, banner: { js: "import { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);" }, metafile: true }).then(result => {
@@ -23,7 +29,7 @@ await build({ entryPoints: ['mcp/server.mjs'], outfile: path.join(stage, 'mcp/se
   }).join('\n'));
 });
 execFileSync(process.execPath, ['mcp/node_modules/@anthropic-ai/mcpb/dist/cli/cli.js', 'validate', path.join(stage, 'manifest.json')], { stdio: 'inherit' });
-const archive = path.resolve('output/mcp/0.1.0/carbon-lite-mcp-0.1.0.mcpb');
+const archive = path.resolve(`output/mcp/${version}/carbon-lite-mcp-${version}.mcpb`);
 execFileSync(process.execPath, ['mcp/node_modules/@anthropic-ai/mcpb/dist/cli/cli.js', 'pack', stage, archive], { stdio: 'inherit' });
 const sha = crypto.createHash('sha256').update(fs.readFileSync(archive)).digest('hex');
 fs.writeFileSync(path.dirname(archive) + '/SHA256SUMS', `${sha}  ${path.basename(archive)}\n`);
@@ -32,7 +38,7 @@ fs.writeFileSync(path.dirname(archive) + '/server.json', JSON.stringify({
   name: 'io.github.jarbon/carbon-lite', title: 'Testers.ai CARBON Test Harness Lite',
   description: 'Local QA workflows, test evidence, screenshot maps and confidence reports for AI coding agents.',
   repository: { url: 'https://github.com/jarbon/carbon-lite', source: 'github' },
-  websiteUrl: 'https://github.com/jarbon/carbon-lite/blob/main/mcp/README.md', version: '0.1.0',
-  packages: [{ registryType: 'mcpb', identifier: 'https://github.com/jarbon/carbon-lite/releases/download/mcp-v0.1.0/carbon-lite-mcp-0.1.0.mcpb', fileSha256: sha, transport: { type: 'stdio' } }]
+  websiteUrl: 'https://github.com/jarbon/carbon-lite/blob/main/mcp/README.md', version,
+  packages: [{ registryType: 'mcpb', identifier: `https://github.com/jarbon/carbon-lite/releases/download/mcp-v${version}/carbon-lite-mcp-${version}.mcpb`, fileSha256: sha, transport: { type: 'stdio' } }]
 }, null, 2) + '\n');
 console.log(JSON.stringify({ stage, archive, sha }));

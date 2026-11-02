@@ -33,6 +33,6 @@ export function exportWorkspace(store, plugin) {
     html: path.join(store.dir, "reports/index.html"),
     snapshot: path.join(store.dir, "reports/workspace.json"),
     revision: snapshot.revision,
-    note: "Local portable snapshot. Reload after updates, or select workspace.json in the report to watch it. Feedback must be exported and explicitly imported.",
+    note: "Portable HTML is a saved snapshot. The protected live viewer refreshes evidence automatically every two seconds while visible and pauses for unsaved feedback. Offline, reload the HTML or select workspace.json to watch it. Feedback must be exported and explicitly imported.",
   };
 }

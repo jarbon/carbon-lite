@@ -25,10 +25,12 @@ For other stdio MCP clients, unzip the bundle and configure Node 22+:
 Use your actual extracted folder path. No npm install, account, model API key,
 remote backend or OAuth is required for the bundled server.
 
-Ask: **“Use CARBON Lite to test this project and show findings, confidence and next steps.”**
+Ask: **“Use CARBON to test this project and show findings, confidence and next steps.”**
 The host calls `carbon_workflow` or selects the `carbon` MCP prompt, executes
 authorized checks, records results with `carbon_start`/`carbon_update`, and opens
-the file returned by `carbon_report`. Prompts are not global slash commands in every client.
+the browser `openTarget` returned by `carbon_report` (not an HTML file editor).
+The protected read-only loopback viewer expires after 30 minutes; ask CARBON to
+reopen it for a fresh link. Prompts are not global slash commands in every client.
 
 ## Tools and workflows
 

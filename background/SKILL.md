@@ -10,20 +10,21 @@ Run the helper with the host's authorized terminal tool:
 Resolve the real project root first; quote paths. Read `../../background/README.md`
 for the limits, host differences, exact commands and privacy disclosure.
 
-## First-use choice
+## Default quick checks and opt-out
 
-At the end of the first useful CARBON assessment, if `state.setupChoice` is absent,
-offer: **Enable Jay background checks (recommended)** or **Keep manual testing**.
-Explain: after changes and roughly two quiet minutes, Jay performs small local
-checks; no fixes or live-site requests. The default is three minutes per run,
-at most three runs and ten reserved minutes per UTC day, shared across projects.
-Installation alone is not consent. Record their choice only after they answer.
-Do not ask this on unrelated tasks. A decline is durable, not another prompt next session.
+Lightweight local checks are on by default where the host trusts the command hooks.
+Preserve existing saved disables and global pauses. Briefly explain on first use:
+Jay checks changed source after roughly two quiet minutes, without running the app
+or making model requests. Three minutes per run, at most three runs and ten reserved
+minutes per UTC day, shared across projects. Offer “Pause background checks”; do not
+repeatedly ask someone who already paused. AI review and executable project tests
+still require separate approval. Host-hook approval is never bypassed.
 
 `configure <root> '{"enabled":true}' --approved` records explicit approval.
 `pause <root>` records a decline or pauses this project. `off-everywhere <root>`
 stops all projects, including work already running. `allow-projects <root>` clears
-only that global pause; it does not enable any new project. Ask before re-enabling.
+only that global pause; projects with no saved setting then use the on-by-default
+local checks, while explicitly disabled projects stay disabled. Explain this and ask before re-enabling.
 `review <root>` returns saved evidence and records that the user reviewed this run.
 
 ## Daily chat reminder
@@ -60,8 +61,11 @@ production credentials. Do not infer test safety from a package.json script name
 
 ## Results
 
-Show one brief Jay summary: checks passed/failed/deferred, strongest actionable
-finding and the next behavior check. Offer the `latest.html` report, review evidence,
+Show one brief Jay summary: checks passed/failed/deferred, possible issues by category,
+strongest actionable finding and the next behavior check. Use the bundled
+`background/jay-gray.webp` icon where local images are supported; otherwise say Jay.
+Use monochrome bars with counts, not a made-up quality percentage or green styling.
+Do not use another product's name or icon. Offer the `latest.html` report, review evidence,
 ask the coding agent to fix a selected issue, or pause. Do not auto-fix, manufacture
 confidence percentages, or describe source inspection as browser testing. No token
 counter. A timeout, provider failure or cancellation is partial/blocked, not a pass.

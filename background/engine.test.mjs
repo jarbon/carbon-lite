@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {execFileSync,spawnSync} from 'node:child_process';
 import {createSupervisor,validateConfig,recommendCheck} from './engine.mjs';
+import {reviewChanges} from './quick-checks.mjs';
 function fixture(t) {
   const temp=fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()),'jay-background-'));
   const root=path.join(temp,'project');fs.mkdirSync(root);
@@ -14,9 +15,9 @@ function fixture(t) {
   t.after(()=>fs.rmSync(temp,{recursive:true,force:true}));
   const s=createSupervisor({home:path.join(temp,'state')});return {s,root,temp,git};
 }
-test('install does not grant consent, disabling is durable, limits validate',async t=>{
+test('local checks default on, explicit disabling is durable, limits validate',async t=>{
   const {s,root}=fixture(t);
-  assert.equal(s.status(root).config.enabled,false);
+  assert.equal(s.status(root).config.enabled,true);
   await assert.rejects(s.configure(root,{enabled:true}),/approval/);
   assert.throws(()=>validateConfig({runSeconds:601}));assert.throws(()=>validateConfig({dailyRuns:100}));
   await s.configure(root,{enabled:false});assert.equal(s.status(root).state.setupChoice,'disabled');
@@ -33,11 +34,11 @@ test('actual syntax failures, unchanged dedup, local report escaping and review 
   assert.equal((await s.run(root)).skipped,'unchanged');
   await s.review(root);await s.review(root);assert.equal(s.status(root).metrics.reviewed,1);
 });
-test('symlink source and secret paths are excluded; source cannot opt in',async t=>{
+test('symlink source and secret paths are excluded; source cannot configure execution',async t=>{
   const {s,root,temp}=fixture(t);
   fs.writeFileSync(path.join(temp,'outside.json'),'{}');fs.symlinkSync(path.join(temp,'outside.json'),path.join(root,'linked.json'));
-  fs.writeFileSync(path.join(root,'secret.json'),'{}');fs.mkdirSync(path.join(root,'.carbon'));fs.writeFileSync(path.join(root,'.carbon','settings.json'),'{"enabled":true}');
-  const sn=s.snapshot(root);assert.equal(sn.files.length,0);assert.equal(s.status(root).config.enabled,false);
+  fs.writeFileSync(path.join(root,'secret.json'),'{}');fs.mkdirSync(path.join(root,'.carbon'));fs.writeFileSync(path.join(root,'.carbon','settings.json'),'{"enabled":false}');
+  const sn=s.snapshot(root);assert.equal(sn.files.length,0);assert.equal(s.status(root).config.enabled,true);
 });
 test('CommonJS .js and ESM syntax are accepted without executing source',async t=>{
   const {s,root}=fixture(t);await s.configure(root,{enabled:true},true);
@@ -76,7 +77,7 @@ test('24-hour reminders are per thread, once daily, and never authorize a run',a
   const hook=(id,prompt='Explain this code')=>s.hook({cwd:root,hook_event_name:'UserPromptSubmit',session_id:id,prompt},'codex');
   assert(!(await hook('a')).hookSpecificOutput.additionalContext.includes('Suggested command'));
   await hook('b');time+=86400001;
-  const note=(await hook('a')).hookSpecificOutput.additionalContext;assert(note.includes('Suggested command'));assert(note.includes('do not start testing'));assert.equal(s.status(root).config.enabled,false);
+  const note=(await hook('a')).hookSpecificOutput.additionalContext;assert(note.includes('Suggested command'));assert(note.includes('do not start testing'));assert.equal(s.status(root).config.enabled,true);
   assert(!(await hook('a')).hookSpecificOutput.additionalContext.includes('Suggested command'));
   assert(!(await hook('b','Run CARBON on this project')).hookSpecificOutput.additionalContext.includes('Suggested command'));
   await s.hook({cwd:root,hook_event_name:'PreToolUse',session_id:'b',tool_name:'Skill',tool_input:{skill:'carbon:carbon'}},'codex');
@@ -135,7 +136,7 @@ test('CLI commands work through a symlink and fail closed for malformed input',t
   const {root,temp}=fixture(t),link=path.join(temp,'linked-engine.mjs');
   fs.symlinkSync(new URL('./engine.mjs',import.meta.url).pathname,link);
   const cli=(...args)=>spawnSync(process.execPath,[link,...args],{encoding:'utf8',env:{...process.env,CARBON_BACKGROUND_TEST_HOME:path.join(temp,'cli-state')},timeout:5000});
-  assert.equal(JSON.parse(cli('status',root).stdout).config.enabled,false);
+  assert.equal(JSON.parse(cli('status',root).stdout).config.enabled,true);
   assert.equal(cli('configure',root,'{"enabled":true}').status,1);
   assert.equal(cli('configure',root,'{"enabled":true}','--approved').status,0);
   assert.equal(cli('pause',root).status,0);
@@ -171,4 +172,58 @@ test('optional AI source review uses an isolated tool-free bounded child; Codex 
   const child=JSON.parse(fs.readFileSync(argsFile));assert(child.args.includes('--strict-mcp-config'));assert(child.args.includes('--no-session-persistence'));assert.equal(child.args[child.args.indexOf('--tools')+1],'');assert.equal(child.args[child.args.indexOf('--max-turns')+1],'1');assert.equal(child.child,'1');assert.notEqual(child.cwd,root);assert(child.input.includes('boundary'));assert(!fs.existsSync(child.cwd));
   const {s:codex,root:codexRoot}=fixture(t);await codex.configure(codexRoot,{enabled:true,aiReview:true},true);fs.writeFileSync(path.join(codexRoot,'app.js'),'let other=1');fs.unlinkSync(argsFile);
   assert.equal((await codex.run(codexRoot,{host:'codex'})).aiReview,null);assert(!fs.existsSync(argsFile));
+});
+
+test('default check finds possible issues on changed lines only, with grayscale Jay report',async t=>{
+  const {s,root,git}=fixture(t);
+  fs.writeFileSync(path.join(root,'app.js'),'eval(oldInput);\nconst unchanged=1;\n');git(['add','.']);git(['commit','-m','old issue']);
+  fs.appendFileSync(path.join(root,'app.js'),'element.innerHTML = input;\ntry { work(); } catch {}\n');
+  fs.writeFileSync(path.join(root,'panel.html'),'<img src="local.png">');
+  fs.writeFileSync(path.join(root,'unit.test.js'),'test.skip("case",()=>{});');
+  const r=await s.run(root);
+  assert.equal(r.findings.length,4);
+  assert(!r.findings.some(f=>f.rule==='dynamic-evaluation'));
+  assert(r.findings.every(f=>f.status==='possible'&&f.line>0));
+  assert.equal(r.categories.find(c=>c.category==='Security').possible,1);
+  assert.equal(r.failed,0);
+  const html=fs.readFileSync(r.report,'utf8');
+  assert.match(html,/data:image\/webp;base64/);assert.match(html,/Possible issues by category/);
+  assert(!/jank|#101715|#638c76/i.test(html));
+  for(const hex of html.matchAll(/#([a-f0-9]{6}|[a-f0-9]{3})\b/gi)) {
+    const value=hex[1];assert(value.length===3?value[0]===value[1]&&value[1]===value[2]:value.slice(0,2)===value.slice(2,4)&&value.slice(2,4)===value.slice(4,6));
+  }
+});
+test('safe examples and comment lines do not generate pattern findings',()=>{
+  const text='// eval(input)\n<img alt="" src="a">\ntest("case",()=>{});\ntry { work(); } catch (e) { report(e); }';
+  assert.deepEqual(reviewChanges([{name:'safe.jsx',text,changedLines:[1,2,3,4]}]).findings,[]);
+});
+test('security rules flag concrete source locations without treating them as reproduced bugs',()=>{
+  const text='eval(input);\nnew Function(source);\nconst options={rejectUnauthorized:false};';
+  const review=reviewChanges([{name:'connection.js',text,changedLines:[1,2,3]}]);
+  assert.deepEqual(review.findings.map(f=>f.rule),['dynamic-evaluation','dynamic-evaluation','tls-disabled']);
+  assert(review.findings.every(f=>f.status==='possible'&&f.category==='Security'));
+  assert.equal(reviewChanges([{name:'connection.js',text,changedLines:[]}]).findings.length,0);
+  assert.equal(reviewChanges([{name:'connection.js',deleted:true}]).findings.length,0);
+});
+test('disabled settings survive new supervisor and hooks do not instruct automatic review',async t=>{
+  const {s,root,temp}=fixture(t);await s.configure(root,{enabled:false});
+  const fresh=createSupervisor({home:path.join(temp,'state')});
+  assert.equal(fresh.status(root).config.enabled,false);
+  const context=(await fresh.hook({cwd:root,hook_event_name:'SessionStart',session_id:'paused'})).hookSpecificOutput.additionalContext;
+  assert.match(context,/paused/);assert(!context.includes('Jay quick checks are on'));
+  await assert.rejects(fresh.configure(root,{tests:[{label:'not approved',command:process.execPath,args:[],timeoutSeconds:1}]}),/approval/);
+});
+test('new-source checks never execute application code or report untested categories as clean',async t=>{
+  const {s,root,temp}=fixture(t),sentinel=path.join(temp,'must-not-exist');
+  fs.writeFileSync(path.join(root,'app.js'),`require('fs').writeFileSync(${JSON.stringify(sentinel)},'bad')`);
+  const r=await s.run(root);assert(!fs.existsSync(sentinel));
+  assert.equal(r.categories.find(c=>c.category==='Accessibility').checked,false);
+  assert.match(fs.readFileSync(r.report,'utf8'),/Not checked/);
+});
+test('a source change during an approved check marks the result stale',async t=>{
+  const {s,root}=fixture(t);
+  await s.configure(root,{tests:[{label:'Isolated wait',command:process.execPath,args:['-e','setTimeout(()=>{},500)'],timeoutSeconds:2}]},true);
+  fs.writeFileSync(path.join(root,'app.js'),'let before=1');
+  const work=s.run(root);setTimeout(()=>fs.writeFileSync(path.join(root,'app.js'),'let after=2'),200);
+  const r=await work;assert.equal(r.status,'stale');assert.equal(r.stale,true);
 });

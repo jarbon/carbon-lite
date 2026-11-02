@@ -1,3 +1,4 @@
+import { requireTarget } from './target.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -25,6 +26,8 @@ export const settingsSchema = z.strictObject(settingFields);
 const text = z.string().max(6000);
 const evidence = z.array(z.string().max(2000)).max(20);
 export const checkSchema = z.strictObject({
+  screenshotPageIds: z.array(z.string().min(1).max(80)).max(100).optional(),
+  agent: z.string().trim().min(1).max(80).optional(),
   id: z.string().min(1).max(80),
   title: text,
   domain: z.string().max(80),
@@ -72,6 +75,7 @@ export const updateSchema = z.strictObject({
   runId: z.string().regex(/^run-[a-f0-9]{16}$/),
   revision: z.number().int().min(0),
   current: text.optional(),
+  inspection: z.strictObject({kind:z.enum(["screen","file"]),target:text.min(1),lookingFor:text.min(1),pageId:z.string().max(80).optional(),excerpt:z.string().max(3000).optional()}).optional(),
   why: text.optional(),
   summary: text.optional(),
   status: z
@@ -88,6 +92,7 @@ export const updateSchema = z.strictObject({
       z.strictObject({
         id: z.string().min(1).max(80),
         role: text,
+        screenshotPageIds: z.array(z.string().min(1).max(80)).max(100).optional(),
         intent: text,
         journey: text,
         observation: text,
@@ -175,6 +180,7 @@ export class Store {
     if (!path.isAbsolute(root) || !fs.statSync(root).isDirectory())
       throw Error("Select an existing absolute project directory.");
     root = fs.realpathSync(root);
+    requireTarget(root, target);
     return this.mutate((s) => {
       const run = {
         id: "run-" + crypto.randomBytes(8).toString("hex"),
@@ -251,10 +257,42 @@ export class Store {
         );
       for (const k of ["current", "why", "status", "blockers", "confidence"])
         if (v[k] !== undefined) r[k] = v[k];
+      if(v.inspection) r.inspection={...v.inspection,at:new Date().toISOString()};
       r.updatedAt = new Date().toISOString();
       r.revision++;
       if (v.summary) r.history.unshift({ at: r.updatedAt, text: v.summary });
       r.history = r.history.slice(0, 100);
+      return r;
+    });
+  }
+  addPersonaFeedback(args) {
+    const v=z.strictObject({runId:z.string().regex(/^run-[a-f0-9]{16}$/),revision:z.number().int().min(0),personaId:z.string().min(1).max(80),
+      overallRating:z.number().int().min(1).max(5),rationale:text.min(1),
+      feedback:z.array(z.strictObject({category:text.min(1),rating:z.number().int().min(1).max(5),observation:text.min(1),evidence:evidence.min(1)})).min(1).max(20)
+    }).parse(args);
+    return this.mutate(s=>{
+      const r=s.runs.find(x=>x.id===v.runId);
+      if(!r) throw Error("Run not found.");
+      if(r.revision!==v.revision) throw Error("Run changed. Read the latest revision before updating.");
+      if(!r.personas.some(p=>p.id===v.personaId)) throw Error("Persona not found.");
+      const {runId,revision,...review}=v;
+      r.personaReviews=[...(r.personaReviews||[]),{...review,at:new Date().toISOString()}];
+      r.revision++;return r;
+    });
+  }
+  addRiskAnalysis(args) {
+    const v = z.strictObject({
+      runId:z.string().regex(/^run-[a-f0-9]{16}$/), revision:z.number().int().min(0),
+      summary:text, limitations:z.array(text).max(20),
+      risks:z.array(z.strictObject({title:text,priority:z.enum(["high","medium","low"]),consequence:text,evidence,remaining:text,next:text})).min(1).max(20)
+    }).parse(args);
+    return this.mutate(s => {
+      const r=s.runs.find(r=>r.id===v.runId);
+      if(!r) throw Error("Run not found.");
+      if(r.revision!==v.revision) throw Error("Run changed. Read the latest revision before updating.");
+      const {runId,revision,...analysis}=v;
+      r.riskAnalyses=[...(r.riskAnalyses||[]),{...analysis,at:new Date().toISOString()}];
+      r.revision++;
       return r;
     });
   }

@@ -1,18 +1,40 @@
 {
   "name": "carbon-lite",
-  "version": "0.1.7",
-  "description": "CARBON Lite: AI software testing and QA skills for developers and QA engineers, with a portable visual report and no MCP server.",
+  "version": "0.1.16",
+  "description": "Carbon Core is an open-source AI testing agent for software testing, quality checks, accessibility testing, regression testing and bug finding. Jay plans risk-based tests and produces evidence-backed quality reports inside your coding agent.",
   "author": {
     "name": "testers.ai",
     "url": "https://testers.ai/carbon/"
   },
   "license": "MIT",
   "repository": "https://github.com/jarbon/carbon-lite",
+  "keywords": [
+    "software-testing",
+    "testing",
+    "test-harness",
+    "quality-assurance",
+    "qa",
+    "bug-finding",
+    "accessibility-testing",
+    "regression-testing",
+    "test-reports",
+    "carbon",
+    "jay",
+    "ai-test-manager",
+    "test-management",
+    "ai-agent",
+    "testing-agent",
+    "quality-checks",
+    "software-quality",
+    "test-planning",
+    "browser-testing",
+    "carbon-core"
+  ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "CARBON Lite",
-    "shortDescription": "AI software testing and QA",
-    "longDescription": "CARBON Lite helps developers and QA engineers test software inside their coding agent. Jay, an AI test manager, guides eight bounded workflows: broad assessment, focused feature testing, issue hunting, accessibility, current-run evidence maps, disposable demos, help, and preferences. Talk directly to Jay with /jay or /j. Includes a portable visual Studio report with evidence-backed findings, coverage gaps, and confidence assessments. Uses the coding agent's authorized browser and terminal tools; reports distinguish executed checks from proposed work. Test coverage depends on the available project context, access, and execution tools. No MCP server, OAuth, telemetry, or hosted account. Open source under the MIT license. Not a certification or guarantee that software is defect-free.",
+    "displayName": "CARBON Core",
+    "shortDescription": "AI testing agent & QA checks",
+    "longDescription": "Carbon Core is an open-source AI testing agent for software testing and quality checks inside your coding agent. Jay, your AI test manager, helps developers and QA engineers plan risk-based tests, test user journeys, find reproducible bugs, investigate accessibility and create evidence-backed quality reports.\n\nStart with /carbon for a risk-based assessment or /full for a comprehensive, resumable testing workflow using the included capabilities. Use /carbon-test for feature testing and browser testing with authorized host tools; /carbon-issues for bug finding; /carbon-accessibility for accessibility testing; and /carbon-map to explore test evidence and coverage gaps. Jay can help create regression tests using your project's test framework. Try the bundled TestBucks demo or talk to Jay with /jay or /j.\n\nReview test plans, findings, test results and confidence assessments in visual HTML reports. Executed checks remain distinct from proposed work; confidence reflects available evidence, not a correctness guarantee. Coverage depends on project context, access and available tools.\n\nUses the host's authorized browser and terminal tools and configured model access. No separate CARBON model key, MCP server, OAuth or hosted account is required. Model usage remains subject to the host provider’s terms. Local evidence stays in your workspace; your coding agent may send context to its model provider. Optional command-usage analytics is off by default. Distributed under the MIT license.",
     "developerName": "testers.ai",
     "category": "Developer Tools",
     "capabilities": [],
@@ -25,9 +47,9 @@
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/icon.png",
     "defaultPrompt": [
-      "Assess this project with CARBON Lite.",
-      "Review these test results and explain the remaining risks.",
-      "Open my CARBON Lite report."
+      "Run Carbon Core quality checks on this project.",
+      "Plan software tests and investigate accessibility issues.",
+      "Review test results, bugs and remaining regression risks."
     ]
   },
   "hooks": "./hooks/codex.json"
