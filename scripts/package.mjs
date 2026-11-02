@@ -42,7 +42,9 @@ for (const file of [
   "SUBMISSION.md",
   "VERIFICATION.md",
 ])
-  fs.cpSync(file, path.join(stage, file), { recursive: true });
+  fs.cpSync(file, path.join(stage, file), { recursive: true,
+    filter: source => !/(?:^|\/)(?:__pycache__|\.DS_Store)(?:\/|$)|\.pyc$/.test(source)
+  });
 fs.writeFileSync(path.join(stage, '.codex-plugin/plugin.json'), JSON.stringify(manifest, null, 2) + '\n');
 if (publicDirectory) {
   const note = '# Public marketplace edition\n\nThis package installs no lifecycle hooks. Run /carbon, /full or a focused command explicitly. Automatic settings do not schedule after-edit checks without hooks; do not claim background monitoring is active. The separate manual-install package supports trusted local hooks.\n\n';
@@ -60,7 +62,7 @@ const notices =
   "\nBuild-only esbuild is installed from package-lock.json and is not included in the runtime.\n";
 fs.writeFileSync(path.join(stage, "THIRD-PARTY-NOTICES.txt"), notices);
 const forbidden =
-  /(?:^|\/)(?:node_modules|\.env(?:\..*)?|\.mcp\.json|\.app\.json|workspace\.json|\.carbon|\.git|proof|proof\.md|carbon_proof[^/]*)(?:\/|$)/;
+  /(?:^|\/)(?:node_modules|__pycache__|\.DS_Store|\.env(?:\..*)?|\.mcp\.json|\.app\.json|workspace\.json|\.carbon|\.git|proof|proof\.md|carbon_proof[^/]*)(?:\/|$)|\.pyc$/;
 function walk(dir, base = "") {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const rel = path.posix.join(base, e.name);
